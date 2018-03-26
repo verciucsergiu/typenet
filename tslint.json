@@ -44,6 +44,7 @@
                 "Object"
             ]
         ],
-        "member-ordering": false
+        "member-ordering": false,
+        "interface-name": false
     }
 }

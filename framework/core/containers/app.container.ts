@@ -44,7 +44,7 @@ export class AppContainer {
                 method = ctrl.getMethod(remaingUrl, verb);
                 if (method) {
                     const params: Array<any> = method.getActionParams(remaingUrl, requestBody);
-                    return new Action(method.method[method.propKey], params);
+                    return new Action(ctrl, method.method[method.propKey], params);
                 } else {
                     currentUrl = currentUrl + '/' + parsedUrl[currentIndex++];
                 }

@@ -3,11 +3,11 @@ import { AppParams } from './decorators/models';
 import { AppContainer, DecoratorHandler } from './containers';
 import { RequestHandler } from './handlers';
 import { DbContext } from '../database';
+import { DependencyContainer, Scope } from '../injector';
+import { InjectableClass } from '../injector/injectable-class';
 
 export class Core {
     private startupClass: any;
-
-    private database: DbContext;
 
     constructor() {
     }
@@ -26,8 +26,10 @@ export class Core {
         return this;
     }
 
-    public useDatabase(database: DbContext): Core {
-        this.database = database;
+    public useDatabase(database: any): Core {
+        DependencyContainer.addInjectableClass(
+            new InjectableClass(database.constructor.name, null, database),
+            Scope.Singleton);
         return this;
     }
 }

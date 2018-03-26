@@ -1,14 +1,13 @@
 
 import { DbOptions } from './options';
 import { Connection, createConnection } from 'typeorm';
+import { Student } from '../../src/03-core';
 
 export class DbContext {
-    constructor(private dbOptions: DbOptions) {
-    }
+    private connection: Promise<Connection>;
 
-    public get database(): Promise<Connection> {
-        console.log('create database!');
-        return createConnection({
+    constructor(private dbOptions: DbOptions) {
+        this.connection = createConnection({
             type: 'mysql',
             host: this.dbOptions.host,
             port: this.dbOptions.port,
@@ -20,6 +19,10 @@ export class DbContext {
             ],
             synchronize: true
         });
+    }
+
+    public get database(): Promise<Connection> {
+        return this.connection;
     }
 
     private entitiesDirname(): string {
