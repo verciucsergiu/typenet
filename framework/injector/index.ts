@@ -1,4 +1,3 @@
-export * from './dependency.container';
-export * from './inectable.decorator';
-export * from './inject.decorator';
-export * from './scope';
+export * from './decorators/inject';
+export * from './decorators/injectable';
+export * from './dependency-container';

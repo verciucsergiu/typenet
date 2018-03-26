@@ -9,26 +9,23 @@ import { Inject, DependencyContainer } from '../../framework/injector';
 @Controller('api/students')
 export class StudentsController {
 
-    constructor(
-        @Inject(DatabaseContext) private context: DatabaseContext,
-        @Inject(StudentRepository) private repository: StudentRepository) {
+    constructor(@Inject(StudentRepository) private repository: StudentRepository) {
     }
 
     @HttpGet('{id}')
-    public getStudentById(@FromRoute('{id}') id: string): IActionResult {
-        DependencyContainer.getClass('DatabaseContext');
-        return new Ok('oki');
+    public async getStudentById(@FromRoute('{id}') id: string): Promise<IActionResult> {
+        const stud = await this.repository.get(parseInt(id, 10));
+        return new Ok(stud);
     }
 
     @HttpPost('')
-    public addNewStudent(@FromBody() emplyee: Student): IActionResult {
-        console.log(emplyee.lastName);
+    public async addNewStudent(@FromBody() student: Student): Promise<IActionResult> {
+        await this.repository.add(student);
         return new Ok();
     }
 
     @HttpPost('{id}/delete')
     public addNewStudentById(@FromRoute('{id}') id: string, @FromBody() emplyee: Student): IActionResult {
-        console.log(emplyee);
         return new Ok();
     }
 }

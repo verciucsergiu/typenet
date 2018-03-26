@@ -5,8 +5,9 @@ export class DbOptionBuilder {
     private username: string = '';
     private password: string = '';
     private dialect: string = '';
-    private port: number;
+    private port: number = 3678;
     private host: string = 'localhost';
+    private folder: string = '';
 
     private connectionString: string = null;
 
@@ -48,16 +49,25 @@ export class DbOptionBuilder {
         return this;
     }
 
+    public addEnitiesFolder(value: string): DbOptionBuilder {
+        this.folder = value;
+        return this;
+    }
+
     public build(): DbOptions {
         if (this.connectionString) {
             return DbOptions.createInstanceUsingConnectionString(this.connectionString);
         } else {
-            return DbOptions.createInstanceUsingOptions(
-                this.database,
-                this.username,
-                this.password,
-                this.database,
-                this.host);
+            return DbOptions.createInstanceUsingOptions({
+                connectionString: null,
+                database: this.database,
+                port: this.port,
+                dialect: this.dialect,
+                entitiesFolder: this.folder,
+                host: this.host,
+                password: this.password,
+                username: this.username
+            });
         }
     }
 }

@@ -1,22 +1,22 @@
 import 'reflect-metadata';
 import { Core } from './framework/core';
 import { DbOptionBuilder, DbOptions } from './framework/database';
-import { DatabaseContext } from './src/02-persistance/database-context';
-import { StudentRepository } from './src/02-persistance/student.repository';
-import { Student } from './src/03-core';
 import { Startup } from './src/startup';
+import { DatabaseContext } from './src/02-persistance';
 
+const entitiesDirname: string = __dirname + '/src/03-core/domain/*.js';
 const databaseOptions = new DbOptionBuilder();
 const options: DbOptions = databaseOptions
     .useMySqlServer()
     .useDatabase('end')
     .useUsername('root')
     .usePassword('root')
+    .useHost('localhost')
     .usePort(3306)
+    .addEnitiesFolder(entitiesDirname)
     .build();
 
 const core: Core = new Core();
-const database: DatabaseContext = new DatabaseContext(options);
-core.useStartup(Startup)
-    .useDatabase(database)
+core.useStartupClass(Startup)
+    .useDatabase(DatabaseContext, new DatabaseContext(options))
     .run();

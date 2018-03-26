@@ -1,9 +1,9 @@
 import { BaseRepository } from './base.repository';
 import { Student } from '../03-core';
-import { Injectable, Scope, Inject } from '../../framework/injector';
 import { DatabaseContext } from './database-context';
+import { Injectable, Inject } from '../../framework/injector';
 
-@Injectable(Scope.InstancePerDependency)
+@Injectable()
 export class StudentRepository extends BaseRepository<Student> {
     protected type: Function = Student;
 

@@ -1,5 +1,5 @@
-import { DependencyContainer } from '../../../injector';
 import { ControllerContainerModel } from './controller-container.model';
+import { DependencyContainer } from '../../../injector';
 
 export class Action {
     constructor(
@@ -9,9 +9,10 @@ export class Action {
     }
 
     public executeAction(): any {
-        const params: Array<any> = DependencyContainer.resolveClass(this.contoller.controllerName);
-        const ctrl: any = this.contoller.contoller.bind.apply(this.contoller.contoller, params);
-        const result = new ctrl();
-        return result[this.method.name].apply(null, this.urlParams);
+        // const params: Array<any> = DependencyContainer.resolveController(this.contoller.controllerName);
+        // const ctrl: any = this.contoller.contoller.bind.apply(this.contoller.contoller, null);
+        // const result = new ctrl();
+        const controllerInstance = DependencyContainer.get(this.contoller.contoller);
+        return controllerInstance[this.method.name].apply(controllerInstance, this.urlParams);
     }
 }

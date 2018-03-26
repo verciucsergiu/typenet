@@ -15,7 +15,7 @@ export class DbContext {
             password: this.dbOptions.username,
             database: this.dbOptions.database,
             entities: [
-                this.entitiesDirname()
+                this.dbOptions.entitiesFolder
             ],
             synchronize: true
         });
@@ -23,11 +23,5 @@ export class DbContext {
 
     public get database(): Promise<Connection> {
         return this.connection;
-    }
-
-    private entitiesDirname(): string {
-        let dirname = __dirname;
-        dirname = dirname.slice(0, dirname.indexOf('02-persistance'));
-        return dirname + '03-core/domain/*.js';
     }
 }

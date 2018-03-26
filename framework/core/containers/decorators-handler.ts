@@ -1,4 +1,5 @@
 export class DecoratorHandler {
+    private static stack: Array<Function> = Array<Function>();
 
     public static addDecoratorAction(action: Function): void {
         this.stack.unshift(action);
@@ -9,6 +10,4 @@ export class DecoratorHandler {
             action();
         }
     }
-
-    private static stack: Array<Function> = Array<Function>();
 }

@@ -3,8 +3,7 @@ import { AppParams } from './decorators/models';
 import { AppContainer, DecoratorHandler } from './containers';
 import { RequestHandler } from './handlers';
 import { DbContext } from '../database';
-import { DependencyContainer, Scope } from '../injector';
-import { InjectableClass } from '../injector/injectable-class';
+import { DependencyContainer } from '../injector';
 
 export class Core {
     private startupClass: any;
@@ -21,15 +20,13 @@ export class Core {
         console.log('Server is up and running at : http://localhost:' + settings.port);
     }
 
-    public useStartup(startup: any): Core {
+    public useStartupClass(startup: any): Core {
         this.startupClass = startup;
         return this;
     }
 
-    public useDatabase(database: any): Core {
-        DependencyContainer.addInjectableClass(
-            new InjectableClass(database.constructor.name, null, database),
-            Scope.Singleton);
+    public useDatabase(type: Function, database: any): Core {
+        DependencyContainer.set({ global: true, value: database, type: type });
         return this;
     }
 }
