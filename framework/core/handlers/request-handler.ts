@@ -1,10 +1,10 @@
 import { ServerRequest, ServerResponse } from 'http';
-import { AppContainer } from '../containers';
 import { ResponseHandler } from './response-handler';
-import { ControllerContainerModel, ActionContainer, Action } from '../containers/models';
-import { NotFoundException, PayloadTooLargeException } from './server-exceptions';
-import { NotFound, InternalServerError } from '..';
-
+import { NotFoundException } from '../server-exceptions/not-found.exception';
+import { PayloadTooLargeException } from '../server-exceptions/payload-too-large.exception';
+import { NotFound, InternalServerError } from '../http-responses';
+import { Action } from '../app-container/types/action';
+import { AppContainer } from '../app-container/app-container';
 export class RequestHandler {
     private body: any = null;
 
@@ -16,7 +16,7 @@ export class RequestHandler {
         const requestUrl: string = this.request.url.slice(1).toLowerCase();
         const verb: string = this.request.method.toUpperCase();
         const responseHandler: ResponseHandler = new ResponseHandler(this.response);
-        console.log(requestUrl + ' verb -> ' + verb);
+        console.log(verb + ' : ' + requestUrl);
         this.getRequestBody(() => {
             try {
                 const action: Action = AppContainer.getAction(requestUrl, verb, this.body);
@@ -32,13 +32,13 @@ export class RequestHandler {
     }
 
     private getRequestBody(callback: any): void {
-        let jsonString = '';
+        let jsonString: string = '';
         if (this.request.method.toUpperCase() !== 'GET') {
             this.request.on('data', (data) => {
                 jsonString += data;
                 if (jsonString.length > AppContainer.settings.maxRequestSize) {
                     jsonString = '';
-                    throw new PayloadTooLargeException('');
+                    throw new PayloadTooLargeException();
                 }
             });
 

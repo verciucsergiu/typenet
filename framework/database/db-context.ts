@@ -1,7 +1,7 @@
 
-import { DbOptions } from './options';
 import { Connection, createConnection } from 'typeorm';
 import { Student } from '../../src/03-core';
+import { DbOptions } from './options/db-options';
 
 export class DbContext {
     private connection: Promise<Connection>;

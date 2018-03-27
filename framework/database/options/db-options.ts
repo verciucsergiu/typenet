@@ -1,6 +1,6 @@
-import { DbOptionInterface } from './db-option.interface';
+import { DbOptionsInterface } from './db-options.interface';
 
-export class DbOptions implements DbOptionInterface {
+export class DbOptions implements DbOptionsInterface {
     public connectionString: string;
     public username: string;
     public database: string;
@@ -19,7 +19,7 @@ export class DbOptions implements DbOptionInterface {
         return option;
     }
 
-    public static createInstanceUsingOptions(data: DbOptionInterface): DbOptions {
+    public static createInstanceUsingOptions(data: DbOptionsInterface): DbOptions {
         const option: DbOptions = new DbOptions();
         option.connectionString = null;
         option.username = data.username;

@@ -1,4 +1,4 @@
-import { ServerResponse } from 'http';
+import { ServerResponse, STATUS_CODES } from 'http';
 import { IActionResult } from '../http-responses';
 
 export class ResponseHandler {

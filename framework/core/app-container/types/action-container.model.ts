@@ -1,6 +1,6 @@
-import { UrlParser } from '../helpers';
 import { ActionParameter } from './action-parameter.model';
 import { ParameterType } from './parameter.type';
+import { UrlParser } from '../url-parser.helper';
 
 export class ActionContainer {
     public routes: Array<string> = new Array<string>();
@@ -11,6 +11,7 @@ export class ActionContainer {
         public verb: string,
         public method: any,
         public propKey: string) {
+
         this.routes = UrlParser.parse(route);
     }
 
@@ -24,6 +25,7 @@ export class ActionContainer {
             } else {
                 params[currentParamIndex] = requestBody;
             }
+
             currentParamIndex++;
         }
 

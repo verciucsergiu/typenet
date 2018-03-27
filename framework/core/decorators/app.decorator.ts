@@ -1,6 +1,5 @@
-import { AppDecorator } from './models';
-import { AppContainer } from '../containers';
-import { DependencyContainer } from '../../injector';
+import { AppContainer } from '../app-container/app-container';
+import { AppDecorator } from './models/app.decorator.model';
 
 export function App(settings: AppDecorator) {
     return (target: any) => {

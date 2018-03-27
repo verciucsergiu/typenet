@@ -1,10 +1,9 @@
-import { Controller, HttpGet, HttpPost, FromBody, FromRoute, IActionResult, Ok } from '../../framework/core';
-import { DbOptionBuilder, DbOptions } from '../../framework/database';
+import { Controller, HttpGet, FromRoute, IActionResult, Ok, HttpPost, FromBody } from '@typenet/core';
+import { Inject } from '@typenet/injector';
 
 import { Student } from '../03-core/domain';
 import { DatabaseContext } from '../02-persistance/database-context';
 import { StudentRepository } from '../02-persistance/student.repository';
-import { Inject, DependencyContainer } from '../../framework/injector';
 
 @Controller('api/students')
 export class StudentsController {

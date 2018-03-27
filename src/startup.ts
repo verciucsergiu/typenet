@@ -1,5 +1,5 @@
-import { App, Core } from '../framework/core';
 import { StudentsController } from './01-controllers';
+import { App } from '@typenet/core';
 
 @App({
     controllers: [

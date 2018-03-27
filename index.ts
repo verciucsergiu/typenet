@@ -1,6 +1,7 @@
+import { DbOptionBuilder, DbOptions } from '@typenet/database';
+import { WebApiBuilder } from '@typenet/core';
+
 import 'reflect-metadata';
-import { Core } from './framework/core';
-import { DbOptionBuilder, DbOptions } from './framework/database';
 import { Startup } from './src/startup';
 import { DatabaseContext } from './src/02-persistance';
 
@@ -16,7 +17,7 @@ const options: DbOptions = databaseOptions
     .addEnitiesFolder(entitiesDirname)
     .build();
 
-const core: Core = new Core();
+const core: WebApiBuilder = new WebApiBuilder();
 core.useStartupClass(Startup)
     .useDatabase(DatabaseContext, new DatabaseContext(options))
     .run();

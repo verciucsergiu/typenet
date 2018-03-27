@@ -6,6 +6,12 @@
     "sourceMap": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
+    "baseUrl": ".",
+    "paths": {
+        "@typenet/*": [
+            "framework/*"
+        ]
+    }
   },
   "files": [
     "./node_modules/@types/mocha/index.d.ts",

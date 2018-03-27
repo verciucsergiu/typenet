@@ -1,11 +1,11 @@
 import * as http from 'http';
-import { AppParams } from './decorators/models';
-import { AppContainer, DecoratorHandler } from './containers';
-import { RequestHandler } from './handlers';
-import { DbContext } from '../database';
 import { DependencyContainer } from '../injector';
+import { RequestHandler } from './handlers/request-handler';
+import { DecoratorHandler } from './decorators/decorators-handler';
+import { AppContainer } from './app-container/app-container';
+import { AppParams } from './decorators/models/app-params.model';
 
-export class Core {
+export class WebApiBuilder {
     private startupClass: any;
 
     constructor() {
@@ -20,12 +20,12 @@ export class Core {
         console.log('Server is up and running at : http://localhost:' + settings.port);
     }
 
-    public useStartupClass(startup: any): Core {
+    public useStartupClass(startup: any): WebApiBuilder {
         this.startupClass = startup;
         return this;
     }
 
-    public useDatabase(type: Function, database: any): Core {
+    public useDatabase(type: Function, database: any): WebApiBuilder {
         DependencyContainer.set({ global: true, value: database, type: type });
         return this;
     }

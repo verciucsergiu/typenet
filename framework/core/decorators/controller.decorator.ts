@@ -1,6 +1,7 @@
-import { ControllerContainerModel } from '../containers/models';
-import { AppContainer, DecoratorHandler } from '../containers';
 import { DependencyContainer } from '../../injector';
+import { DecoratorHandler } from './decorators-handler';
+import { AppContainer } from '../app-container/app-container';
+import { ControllerContainerModel } from '../app-container/types/controller-container.model';
 
 export function Controller(route: string) {
     return (target: any) => {

@@ -10,10 +10,6 @@ export class ControllerContainerModel {
         public path: string = '') {
     }
 
-    public getContollerInstance(): any {
-        return new this.contoller();
-    }
-
     public getMethod(routes: Array<string>, verb: string): ActionContainer {
         return this.methods.find((method: ActionContainer) => method.isCurrentRoute(routes, verb));
     }

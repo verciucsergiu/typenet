@@ -1,15 +1,7 @@
 import { DependencyContainer } from '../dependency-container';
 
 /**
- * Declare a class that can be injected into classes constructors using @Inject decorator.
- * @Injectable()
- * class MyClass {
- * }
- *
- * class Test {
- *      constructor(@Inject(MyClass) myClass: MyClass) {
- *      }
- * }
+ * Decorate a class that can be injected into classes constructors using 'Inject' decorator.
  */
 export function Injectable() {
     return (target: Function) => {

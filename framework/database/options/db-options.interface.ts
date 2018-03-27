@@ -1,4 +1,4 @@
-export interface DbOptionInterface {
+export interface DbOptionsInterface {
     connectionString: string;
     username: string;
     database: string;

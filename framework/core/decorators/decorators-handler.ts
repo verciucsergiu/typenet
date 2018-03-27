@@ -1,3 +1,7 @@
+/**
+ * Used to reverse decorators evaluation. See:
+ * http://www.typescriptlang.org/docs/handbook/decorators.html#decorator-evaluation
+ */
 export class DecoratorHandler {
     private static stack: Array<Function> = Array<Function>();
 
