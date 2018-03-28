@@ -1,9 +1,8 @@
-import { DbOptionBuilder, DbOptions } from '@typenet/database';
-import { WebApiBuilder } from '@typenet/core';
-
 import 'reflect-metadata';
 import { Startup } from './src/startup';
 import { DatabaseContext } from './src/02-persistance';
+import { DbOptionBuilder, DbOptions } from './framework/database';
+import { WebApiBuilder } from './framework/core';
 
 const entitiesDirname: string = __dirname + '/src/03-core/domain/*.js';
 const databaseOptions = new DbOptionBuilder();

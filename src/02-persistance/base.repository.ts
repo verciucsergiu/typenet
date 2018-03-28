@@ -1,6 +1,7 @@
+import { Connection, Repository } from 'typeorm';
+
 import { BaseEntity, Student } from '../03-core';
 import { DatabaseContext } from './database-context';
-import { Connection, Repository } from 'typeorm';
 
 export abstract class BaseRepository<T extends BaseEntity> {
 
@@ -10,13 +11,18 @@ export abstract class BaseRepository<T extends BaseEntity> {
     protected abstract get type(): Function;
 
     public async add<TEntity extends BaseEntity>(entity: TEntity): Promise<TEntity> {
-        const dbSet =  await this.dbSet();
+        const dbSet = await this.dbSet();
         return dbSet.save(entity);
     }
 
-    public async get<TEntity extends BaseEntity>(id: number): Promise<{}> {
-        const dbSet =  await this.dbSet();
+    public async getById<TEntity extends BaseEntity>(id: string): Promise<{}> {
+        const dbSet = await this.dbSet();
         return dbSet.findOneById(id);
+    }
+
+    public async getAll<TEntity extends BaseEntity>(): Promise<Array<{}>> {
+        const dbSet = await this.dbSet();
+        return dbSet.find({ where: { deleted: true } });
     }
 
     public async delete<TEntity extends BaseEntity>(entity: TEntity): Promise<void> {

@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node --inspect dist/",
     "build": "npm-run-all -p compile lint",
-    "compile": "tsc --watch & nodemon dist",
+    "compile": "tsc --watch",
     "lint": "tslint 'src/**/*.ts'",
     "lint-framework": "tslint 'framework/**/*.ts'"
   },

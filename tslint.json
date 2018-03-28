@@ -14,7 +14,7 @@
             "generic"
         ],
         "quotemark": [
-            true,
+            false,
             "single",
             "jsx-double"
         ],
@@ -46,6 +46,8 @@
         ],
         "member-ordering": false,
         "interface-name": false,
-        "no-implicit-dependencies": false
+        "no-implicit-dependencies": false,
+        "no-empty-interface": false,
+        "no-string-literal": false
     }
 }

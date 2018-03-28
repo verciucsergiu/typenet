@@ -4,9 +4,9 @@ import { InjectableNotFound } from './errors/service-not-found';
 
 export class DependencyContainer {
 
-    private static services: Array<ServiceMetadata> = new Array<ServiceMetadata>();
+    private static services: Array<ServiceMetadata> = [];
 
-    private static handlers: Array<PropertyMetadata> = new Array<PropertyMetadata>();
+    private static handlers: Array<PropertyMetadata> = [];
 
     /**
      * Adds given service to the container list of services.

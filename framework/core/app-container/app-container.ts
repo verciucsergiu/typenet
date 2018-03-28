@@ -17,7 +17,7 @@ export class AppContainer {
      * All controlles declared into the @App decorator and are decorated with @Controller as well.
      * This list is used when parsing a new request uri.
      */
-    private static controllers: Array<ControllerContainerModel> = new Array<ControllerContainerModel>();
+    private static controllers: Array<ControllerContainerModel> = [];
 
     /**
      * Pushes the given model into the controllers array.
@@ -64,7 +64,7 @@ export class AppContainer {
             ctrl = this.getController(currentUrl);
 
             if (ctrl) {
-                const remaingUrl: Array<string> = new Array<string>();
+                const remaingUrl: Array<string> = [];
                 for (let index = currentIndex; index < parsedUrl.length; index++) {
                     remaingUrl.push(parsedUrl[index]);
                 }
@@ -81,7 +81,7 @@ export class AppContainer {
             }
         }
 
-        throw new NotFoundException('Method not found!');
+        throw new NotFoundException(`Action for the route "${requestUrl}" with method ${verb} was not found!`);
     }
 
     private static getController(route: string): ControllerContainerModel {

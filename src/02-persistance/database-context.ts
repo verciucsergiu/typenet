@@ -1,5 +1,5 @@
-import { DbContext, DbOptions } from '@typenet/database';
 import { createConnection, Connection } from 'typeorm';
+import { DbContext, DbOptions } from '../../framework/database';
 
 import { Student } from '../03-core/domain';
 

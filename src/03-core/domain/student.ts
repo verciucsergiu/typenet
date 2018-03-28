@@ -5,19 +5,16 @@ import { BaseEntity } from './base.entity';
 export class Student extends BaseEntity {
 
     @Column()
-    public firstName: string = '';
+    private firstName: string = '';
 
     @Column()
-    public lastName: string = '';
+    private lastName: string = '';
 
     @Column()
-    public address: string = '';
+    private class: string = '';
 
     @Column()
-    public position: string = '';
-
-    @Column()
-    public deleted?: boolean = false;
+    private deleted?: boolean = false;
 
     public markAsDeleted(): void {
         this.deleted = true;
@@ -26,4 +23,5 @@ export class Student extends BaseEntity {
     public get fullName(): string {
         return `${this.firstName} ${this.lastName}`;
     }
+
 }

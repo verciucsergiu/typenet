@@ -15,8 +15,10 @@ export class WebApiBuilder {
         const settings: AppParams = AppContainer.settings;
         http.createServer((request: http.IncomingMessage, response: http.ServerResponse) => {
             new RequestHandler(request, response);
+
         }).listen(settings.port);
         DecoratorHandler.handle();
+
         console.log('Server is up and running at : http://localhost:' + settings.port);
     }
 

@@ -1,7 +1,7 @@
 import { StudentsController } from './01-controllers';
-import { App } from '@typenet/core';
+import { WebApi } from '../framework/core';
 
-@App({
+@WebApi({
     controllers: [
         StudentsController
     ],
