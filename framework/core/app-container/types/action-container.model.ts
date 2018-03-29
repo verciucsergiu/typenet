@@ -37,37 +37,28 @@ export class ActionContainer {
     }
 
     public isCurrentRoute(routes: Array<string>, verb: string): boolean {
-        // TODO: refactor this method! Doesnt work properly!
-
-        let defaultRouteAdded: boolean = false;
-        if (routes.length === 0) {
-            routes.push('');
-            defaultRouteAdded = true;
+        if (this.verb !== verb) {
+            return false;
         }
-        let atLeastOneParamWasChecked: boolean = false;
+
+        if (routes.length === 0) {
+            if (this.routes[0] === '') {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
         for (let index = 0; index < this.routes.length; index++) {
             const currentRouteIndex: string = this.routes[index];
             if (currentRouteIndex[0] !== '{' && currentRouteIndex[currentRouteIndex.length - 1] !== '}') {
-                atLeastOneParamWasChecked = true;
                 if (routes[index] !== this.routes[index]) {
                     return false;
                 }
             }
         }
 
-        if (atLeastOneParamWasChecked) {
-            if (this.verb !== verb) {
-                return false;
-            }
-
-            return true;
-
-        } else {
-            if (this.routes.length === routes.length && this.verb === verb && !defaultRouteAdded) {
-                return true;
-            }
-            return false;
-        }
+        return true;
 
     }
 

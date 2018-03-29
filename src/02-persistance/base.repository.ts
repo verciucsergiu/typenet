@@ -22,7 +22,7 @@ export abstract class BaseRepository<T extends BaseEntity> {
 
     public async getAll<TEntity extends BaseEntity>(): Promise<Array<{}>> {
         const dbSet = await this.dbSet();
-        return dbSet.find({ where: { deleted: true } });
+        return dbSet.find({ where: { deleted: false } });
     }
 
     public async delete<TEntity extends BaseEntity>(entity: TEntity): Promise<void> {
