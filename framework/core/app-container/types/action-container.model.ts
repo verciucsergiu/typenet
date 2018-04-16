@@ -3,12 +3,12 @@ import { ParameterType } from './parameter.type';
 import { UrlParser } from '../url-parser.helper';
 
 export class ActionContainer {
-    public routes: Array<string> = new Array<string>();
-    public actionParams: Array<ActionParameter> = new Array<ActionParameter>();
+    private routes: Array<string> = new Array<string>();
+    private actionParams: Array<ActionParameter> = new Array<ActionParameter>();
 
     constructor(
-        public route: string,
-        public verb: string,
+        route: string,
+        private verb: string,
         public method: any,
         public propKey: string) {
 
@@ -17,19 +17,19 @@ export class ActionContainer {
 
     public getActionParams(routes: Array<string>, requestBody: any): Array<any> {
         const paramsValues: Array<string> = this.getParamsFromRoute(routes);
-        const params: Array<string> = new Array<string>();
+        const actualParams: Array<string> = new Array<string>();
         let currentParamIndex = 0;
         for (const actionParam of this.actionParams) {
             if (actionParam.type === ParameterType.FromRoute) {
-                params[actionParam.paramIndex] = paramsValues[actionParam.parameterName];
+                actualParams[actionParam.parameterIndex] = paramsValues[actionParam.parameterName];
             } else {
-                params[currentParamIndex] = requestBody;
+                actualParams[currentParamIndex] = requestBody;
             }
 
             currentParamIndex++;
         }
 
-        return params;
+        return actualParams;
     }
 
     public addActionParameter(actionParameter: ActionParameter): void {
@@ -63,15 +63,15 @@ export class ActionContainer {
     }
 
     private getParamsFromRoute(routes: Array<string>): Array<string> {
-        const params: Array<string> = new Array<string>();
+        const actualParams: Array<string> = new Array<string>();
         for (let index = 0; index < this.routes.length; index++) {
             const currentRouteIndex: string = this.routes[index];
             if (currentRouteIndex[0] === '{' && currentRouteIndex[currentRouteIndex.length - 1] === '}') {
-                params[currentRouteIndex] = routes[index];
+                actualParams[currentRouteIndex] = routes[index];
             }
         }
 
-        return params;
+        return actualParams;
     }
 
 }

@@ -14,7 +14,7 @@ export class AppContainer {
     public static settings: AppParams;
 
     /**
-     * All controlles declared into the @App decorator and are decorated with @Controller as well.
+     * All controlles declared into the @WebApi decorator and are decorated with @Controller as well.
      * This list is used when parsing a new request uri.
      */
     private static controllers: Array<ControllerContainerModel> = [];
@@ -32,23 +32,21 @@ export class AppContainer {
      * @param verb GET, POST, PUT, PATCH, DELETE
      * @param route string that represents the path to that metod
      * @param method function that is called when a request is made to the route
-     * @param propKey method name
+     * @param propKey that function name name
      */
     public static addVerbToController(verb: string, route: string, method: any, propKey: string): void {
         const ctrl: ControllerContainerModel =
             this.controllers
                 .find((controller: ControllerContainerModel) => controller.controllerName === method.constructor.name);
 
-        ctrl.addMethod(new ActionContainer(route, verb, method, propKey));
+        ctrl.addAction(new ActionContainer(route, verb, method, propKey));
     }
 
-    public static addMetadataToControllerMethod(
-        controllerName: string, methodName: string, parameter: ActionParameter): void {
-
+    public static addMetadataToControllerMethod(controllerName: string, methodName: string, parameter: ActionParameter): void {
         const ctrl: ControllerContainerModel =
             this.controllers.find((c: ControllerContainerModel) => c.controllerName === controllerName);
 
-        const method = ctrl.getMethodByName(methodName);
+        const method = ctrl.getActionByName(methodName);
         method.addActionParameter(parameter);
     }
 
@@ -69,7 +67,7 @@ export class AppContainer {
                     remaingUrl.push(parsedUrl[index]);
                 }
 
-                method = ctrl.getMethod(remaingUrl, verb);
+                method = ctrl.getAction(remaingUrl, verb);
                 if (method) {
                     const actionParams: Array<any> = method.getActionParams(remaingUrl, requestBody);
                     return new Action(ctrl, method.method[method.propKey], actionParams);

@@ -6,7 +6,8 @@ import {
     Ok,
     HttpPost,
     FromBody,
-    Created
+    Created,
+    HttpPut
 } from '../../framework/core';
 
 import { Student } from '../03-core/domain';
@@ -45,14 +46,14 @@ export class StudentsController {
     }
 
     @HttpPost('')
-    public async addNewStudent(@FromBody() student: StudentModel): Promise<IActionResult> {
+    public async addNewStudent(@FromBody(StudentModel) student: StudentModel): Promise<IActionResult> {
         const command = new AddNewStudentCommand(student);
         await this.commandDispatcher.dispatchAsync(command);
         return new Created();
     }
 
     @HttpPost('{id}/delete')
-    public addNewStudentById(@FromRoute('{id}') id: string, @FromBody() emplyee: Student): IActionResult {
+    public addNewStudentById(@FromRoute('{id}') id: string, @FromBody(Student) emplyee: Student): IActionResult {
         return new Ok();
     }
 }

@@ -38,7 +38,10 @@ export class DependencyContainer {
             return service.value;
         }
 
-        // at this point we know that the service is a transient type and a new instance is needed.
+        return this.getTransientInsance(type, service);
+    }
+
+    private static getTransientInsance(type: Function, service: ServiceMetadata): any {
         const properties = this.handlers.filter((p: PropertyMetadata) => p.target === type);
         const params = new Array<any>();
         for (const prop of properties) {

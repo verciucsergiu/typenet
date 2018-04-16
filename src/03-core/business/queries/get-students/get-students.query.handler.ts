@@ -18,6 +18,5 @@ export class GetStudentsQueryHandler implements IQueryHandler<GetStudentsQuery, 
         const result = await this.repository.getAll();
         const mappedResult = result.map((st: StudentModel) => Object.assign(new StudentModel(), st));
         return new GetStudentsQueryResult(mappedResult);
-
     }
 }

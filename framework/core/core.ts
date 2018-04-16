@@ -13,11 +13,10 @@ export class WebApiBuilder {
 
     public run(): void {
         const settings: AppParams = AppContainer.settings;
+        DecoratorHandler.handle();
         http.createServer((request: http.IncomingMessage, response: http.ServerResponse) => {
             new RequestHandler(request, response);
-
         }).listen(settings.port);
-        DecoratorHandler.handle();
 
         console.log('Server is up and running at : http://localhost:' + settings.port);
     }

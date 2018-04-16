@@ -1,10 +1,8 @@
 import { ParameterType } from './parameter.type';
 
-export class ActionParameter {
-    constructor(
-        public type: ParameterType,
-        public paramIndex: number,
-        public parameterName?: string
-    ) {
-    }
+export interface ActionParameter {
+    type: ParameterType;
+    parameterIndex: number;
+    parameterName?: string;
+    parameterType?: Function;
 }

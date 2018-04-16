@@ -1,11 +1,9 @@
-import { Injectable, Inject } from '../../../../../framework/injector';
-import { IQueryHandler, QueryHandler } from '../../../../../framework/CQRS';
-
-import { GetStudentByIdQuery } from './get-student-by-id.query';
+import { QueryHandler, IQueryHandler } from "../../../../../framework/CQRS";
+import { GetStudentByIdQuery } from "./get-student-by-id.query";
 import { GetStudentByIdQueryResult } from './get-student-by-id.query.result';
-import { StudentRepository } from '../../../../02-persistance';
-import { Student } from '../../..';
-import { StudentModel } from '../../models/student.model';
+import { StudentRepository } from "../../../../02-persistance";
+import { Inject } from "../../../../../framework/injector";
+import { StudentModel } from "../../models";
 
 @QueryHandler({
     queryType: GetStudentByIdQuery,
