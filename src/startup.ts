@@ -1,5 +1,5 @@
 import { StudentsController } from './01-controllers';
-import { WebApi } from '../framework/core';
+import { WebApi } from '@typenet/core';
 
 @WebApi({
     controllers: [
