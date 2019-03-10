@@ -16,7 +16,7 @@ const options: DbOptions = databaseOptions
     .addEnitiesFolder(entitiesDirname)
     .build();
 
-const core: WebApiBuilder = new WebApiBuilder();
-core.useStartupClass(Startup)
+new WebApiBuilder()
+    .useStartupClass(Startup)
     .useDatabase(DatabaseContext, new DatabaseContext(options))
     .run();

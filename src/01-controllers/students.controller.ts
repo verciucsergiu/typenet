@@ -6,13 +6,10 @@ import {
     Ok,
     HttpPost,
     FromBody,
-    Created,
-    HttpPut
+    Created
 } from '../../framework/core';
 
 import { Student } from '../03-core/domain';
-import { DatabaseContext } from '../02-persistance/database-context';
-import { StudentRepository } from '../02-persistance/student.repository';
 import { Inject } from '../../framework/injector';
 import { QueryDispatcher, CommandDispatcher } from '../../framework/CQRS';
 import {

@@ -8,9 +8,6 @@ import { AppParams } from './decorators/models/app-params.model';
 export class WebApiBuilder {
     private startupClass: any;
 
-    constructor() {
-    }
-
     public run(): void {
         const settings: AppParams = AppContainer.settings;
         DecoratorHandler.handle();
