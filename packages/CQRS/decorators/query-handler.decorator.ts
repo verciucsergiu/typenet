@@ -1,4 +1,4 @@
-import { DependencyContainer } from '../../injector';
+import { DependencyContainer } from '../injector';
 import { CQRSContainer } from '../cqrs.container';
 import { BaseQueryHandlerMetadata } from '../types/query-handler-base.metadata';
 

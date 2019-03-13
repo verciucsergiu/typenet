@@ -1,5 +1,4 @@
 
-import { Connection, createConnection } from 'typeorm';
 import { DbOptions } from './options/db-options';
 
 export class DbContext {

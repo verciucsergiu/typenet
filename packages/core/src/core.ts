@@ -1,9 +1,8 @@
 import * as http from 'http';
-import { DependencyContainer } from '../injector';
-import { RequestHandler } from './handlers/request-handler';
-import { DecoratorHandler } from './decorators/decorators-handler';
-import { AppContainer } from './app-container/app-container';
 import { AppParams } from './decorators/models/app-params.model';
+import { AppContainer } from './app-container/app-container';
+import { DecoratorHandler } from './decorators/decorators-handler';
+import { RequestHandler } from './handlers/request-handler';
 
 export class WebApiBuilder {
     private startupClass: any;
@@ -20,11 +19,6 @@ export class WebApiBuilder {
 
     public useStartupClass(startup: any): WebApiBuilder {
         this.startupClass = startup;
-        return this;
-    }
-
-    public useDatabase(type: Function, database: any): WebApiBuilder {
-        DependencyContainer.set({ global: true, value: database, type: type });
         return this;
     }
 }

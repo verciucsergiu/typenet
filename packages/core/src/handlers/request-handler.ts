@@ -1,4 +1,4 @@
-import { ServerRequest, ServerResponse } from 'http';
+import { ServerResponse, IncomingMessage } from 'http';
 import { ResponseHandler } from './response-handler';
 import { NotFoundException } from '../server-exceptions/not-found.exception';
 import { PayloadTooLargeException } from '../server-exceptions/payload-too-large.exception';
@@ -9,7 +9,7 @@ import { AppContainer } from '../app-container/app-container';
 export class RequestHandler {
     private body: any = null;
 
-    constructor(private request: ServerRequest, private response: ServerResponse) {
+    constructor(private request: IncomingMessage, private response: ServerResponse) {
         this.handle();
     }
 

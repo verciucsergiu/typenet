@@ -1,0 +1,20 @@
+{
+  "name": "hello-world",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node --inspect dist/",
+    "compile": "tsc --watch"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@typenet/core": "file:../../packages/core/typenet-core-0.0.1.tgz"
+  },
+  "devDependencies": {
+    "@types/mocha": "5.2.6",
+    "@types/node": "11.11.3",
+    "typescript": "3.3.3333"
+  }
+}

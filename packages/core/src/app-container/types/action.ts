@@ -1,5 +1,5 @@
 import { ControllerContainerModel } from './controller-container.model';
-import { DependencyContainer } from '../../../injector';
+import { DependencyContainer } from '../../injector';
 
 export class Action {
     constructor(
