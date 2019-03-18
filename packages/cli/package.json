@@ -1,0 +1,44 @@
+{
+  "name": "@typenet/cli",
+  "version": "0.0.1",
+  "description": "@typenet/cli",
+  "main": "bin/index.js",
+  "scripts": {
+    "start": "node bin/index.js",
+    "build": "tsc",
+    "prepare": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/verciucsergiu/typenet.git"
+  },
+  "author": "Sergiu Verciuc",
+  "license": "ISC",
+  "engines": {
+    "node": ">=8"
+  },
+  "bin": {
+    "typenet": "bin/index.js"
+  },
+  "files": [
+    "bin/**/*"
+  ],
+  "preferGlobal": true,
+  "bugs": {
+    "url": "https://github.com/verciucsergiu/typenet/issues"
+  },
+  "homepage": "https://github.com/verciucsergiu/typenet#readme",
+  "dependencies": {
+    "chalk": "^2.4.2",
+    "figlet": "^1.2.1",
+    "inquirer": "^6.2.2",
+    "shelljs": "^0.8.3"
+  },
+  "devDependencies": {
+    "@types/chalk": "^2.2.0",
+    "@types/figlet": "^1.2.0",
+    "@types/inquirer": "0.0.44",
+    "@types/shelljs": "^0.8.3",
+    "typescript": "^3.3.3333"
+  }
+}
