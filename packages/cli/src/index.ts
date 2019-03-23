@@ -1,14 +1,21 @@
 #!/usr/bin/env node
 
-import chalk from 'chalk';
+import * as commander from 'commander';
+import { CommanderStatic } from 'commander';
+import { CommandsLoader } from './commands/commands.loader';
 
-const init = async () => {
-    console.log(chalk.green("Hello world"));
-}
+const bootstrap = () => {
+    const program: CommanderStatic = commander;
 
-const run = async () => {
-    init();
-}
+    CommandsLoader.load(program);
+    program.version(require('../package.json').version, '-v, --version');
+    commander.parse(process.argv);
 
+    if(!program.args.length) {
+        program.outputHelp();
+    }
 
-run();
+    process.exit(1);
+};
+
+bootstrap();
