@@ -17,7 +17,7 @@ export class AppContainer {
      * All controlles declared into the @WebApi decorator and are decorated with @Controller as well.
      * This list is used when parsing a new request uri.
      */
-    private static controllers: Array<ControllerContainerModel> = [];
+    private static controllers: ControllerContainerModel[] = [];
 
     /**
      * Pushes the given model into the controllers array.

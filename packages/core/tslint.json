@@ -9,10 +9,6 @@
                 140
             ]
         },
-        "array-type": [
-            true,
-            "generic"
-        ],
         "quotemark": [
             false,
             "single",

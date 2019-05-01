@@ -1,5 +1,5 @@
 export class UrlParser {
-    public static parse(url: string): Array<string> {
+    public static parse(url: string): string[] {
         return url.split('/');
     }
 }
