@@ -1,0 +1,52 @@
+{
+  "name": "@typenet/cli",
+  "version": "0.0.1",
+  "description": "@typenet/cli",
+  "main": "bin/index.js",
+  "scripts": {
+    "start": "node bin/index.js",
+    "build": "tsc",
+    "prepare": "npm run build",
+    "test": "mocha --require ts-node/register test/**/*.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/verciucsergiu/typenet.git"
+  },
+  "author": "Sergiu Verciuc",
+  "license": "ISC",
+  "engines": {
+    "node": ">=8"
+  },
+  "bin": {
+    "typenet": "bin/index.js"
+  },
+  "files": [
+    "bin/**/*"
+  ],
+  "preferGlobal": true,
+  "bugs": {
+    "url": "https://github.com/verciucsergiu/typenet/issues"
+  },
+  "homepage": "https://github.com/verciucsergiu/typenet#readme",
+  "dependencies": {
+    "chalk": "^2.4.2",
+    "commander": "2.17.0",
+    "figlet": "^1.2.1",
+    "inquirer": "^6.2.2",
+    "shelljs": "^0.8.3"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.1.7",
+    "@types/chalk": "^2.2.0",
+    "@types/commander": "^2.12.2",
+    "@types/figlet": "^1.2.0",
+    "@types/inquirer": "0.0.44",
+    "@types/mocha": "^5.2.6",
+    "@types/shelljs": "^0.8.3",
+    "chai": "^4.2.0",
+    "mocha": "^6.0.2",
+    "ts-node": "^8.0.3",
+    "typescript": "^3.3.3333"
+  }
+}
