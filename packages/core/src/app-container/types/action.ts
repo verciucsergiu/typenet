@@ -9,7 +9,7 @@ export class Action {
     }
 
     public executeAction(): any {
-        const controllerInstance = DependencyContainer.get(this.contoller.contoller);
+        const controllerInstance = DependencyContainer.getInstance(this.contoller.contoller);
         return controllerInstance[this.method.name].apply(controllerInstance, this.urlParams);
     }
 }

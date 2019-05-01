@@ -1,56 +1,42 @@
-import { ServiceMetadata } from './types/service-metadata';
-import { PropertyMetadata } from './types/property-metadata';
-import { InjectableNotFound } from './errors/service-not-found';
-
 export class DependencyContainer {
 
-    private static services: Array<ServiceMetadata> = [];
+    public static readonly services: Function[] = [];
+    public static instances: any[] = [];
 
-    private static handlers: Array<PropertyMetadata> = [];
-
-    /**
-     * Adds given service to the container list of services.
-     * @param service ServiceMetadata
-     */
-    public static set(service: ServiceMetadata): void {
-        this.services.push(service);
+    public static registerService(service: Function): void {
+        this.services[service.name] = Reflect.getMetadata('design:paramtypes', service);
     }
 
-    /**
-     * Adds given handler to the container list.
-     * @param handler PropertyMetadata
-     */
-    public static register(handler: PropertyMetadata): void {
-        this.handlers.push(handler);
-    }
+    public static getInstance(classToInstantiate: Function): any {
+        const instance = this.getInternalInstance(classToInstantiate);
+        this.instances = [];
 
-    /**
-     * Returns a global/new instance of the type requested.
-     * Not recommended to use outside of the framework.
-     * @param type Function
-     */
-    public static get(type: Function): any {
-        // find the required type
-        const service = this.services.find((s: ServiceMetadata) => s.type === type);
-        if (!service) {
-            throw new InjectableNotFound(type);
-        } else if (service.global && service.value) {
-            return service.value;
-        }
-
-        return this.getTransientInsance(type, service);
-    }
-
-    private static getTransientInsance(type: Function, service: ServiceMetadata): any {
-        const properties = this.handlers.filter((p: PropertyMetadata) => p.target === type);
-        const params = new Array<any>();
-        for (const prop of properties) {
-            const propInstance = this.get(prop.type);
-            params[prop.index + 1] = propInstance;
-        }
-
-        // make new instance of the injectable required!
-        const instance = new (service.type.bind.apply(service.type, params))();
         return instance;
+    }
+
+    private static getInternalInstance(classToInstantiate: Function): any {
+        if (this.instances[classToInstantiate.name] !== undefined) {
+            return this.instances[classToInstantiate.name];
+        }
+
+        const classArgs = this.services[classToInstantiate.name];
+
+        if(classArgs !== undefined && classArgs.length > 0) {
+            const params: Function[] = [];
+
+            for (const arg of classArgs) {
+                params.push(this.getInternalInstance(arg));
+            }
+            
+            const instance = new classToInstantiate.prototype.constructor(...params);
+            this.instances[classToInstantiate.name] = instance;
+
+            return instance;
+        } else {
+            const instance = new classToInstantiate.prototype.constructor();
+            this.instances[classToInstantiate.name] = instance;
+            
+            return new classToInstantiate.prototype.constructor();
+        }
     }
 }

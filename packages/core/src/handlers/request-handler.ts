@@ -4,7 +4,7 @@ import { NotFoundException } from '../server-exceptions/not-found.exception';
 import { NotFound, InternalServerError } from '../http-responses';
 import { Action } from '../app-container/types/action';
 import { AppContainer } from '../app-container/app-container';
-import { RequestBodyProvider } from '../utils/request-body-parser';
+import { RequestBodyProvider } from './request-body-parser';
 
 export class RequestHandler {
     public handle(request: IncomingMessage, response: ServerResponse): void {
