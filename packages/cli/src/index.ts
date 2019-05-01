@@ -6,16 +6,19 @@ import { CommandsLoader } from './commands/commands.loader';
 
 const bootstrap = () => {
     const program: CommanderStatic = commander;
+    
+    program.name('typnet');
 
     CommandsLoader.load(program);
     program.version(require('../package.json').version, '-v, --version');
-    commander.parse(process.argv);
+
+    const command = commander.parse(process.argv);
+    console.log(process.argv);
 
     if(!program.args.length) {
         program.outputHelp();
+        return;
     }
-
-    process.exit(1);
 };
 
 bootstrap();

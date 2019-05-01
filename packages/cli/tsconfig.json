@@ -6,7 +6,8 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "declaration": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "types": ["mocha", "node"]
   },
   "include": [
     "src/index.ts",
@@ -14,6 +15,7 @@
   ],
   "exclude": [
     "node_modules",
-    "bin"
-  ]
+    "bin",
+    "tests"
+  ],
 }

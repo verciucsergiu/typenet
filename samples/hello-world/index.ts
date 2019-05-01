@@ -7,8 +7,6 @@ import { DummController } from './dummy.controller';
     },
     controllers: [DummController]
 })
-class Startup {
-
-}
+class Startup { }
 
 const builder = new WebApiBuilder().useStartupClass(Startup).run();

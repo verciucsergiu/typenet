@@ -1,3 +1,4 @@
 {
-  "CurrentProjectSetting": null
+  "CurrentProjectSetting": null,
+  "mocha.files.glob": "**/test/**/*.ts"
 }

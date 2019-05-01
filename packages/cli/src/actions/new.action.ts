@@ -1,6 +1,6 @@
-import { AbstractAction } from "./abstract.action";
 import chalk from 'chalk';
 
+import { AbstractAction } from "./abstract.action";
 
 export class NewAction extends AbstractAction {
     public handle(inputs: any[]): void {

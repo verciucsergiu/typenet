@@ -17,10 +17,13 @@ export class RequestHandler {
         const requestUrl: string = this.request.url.slice(1).toLowerCase();
         const verb: string = this.request.method.toUpperCase();
         const responseHandler: ResponseHandler = new ResponseHandler(this.response);
+        
         process.on('unhandledRejection', (error) => {
             responseHandler.handle(new InternalServerError());
         });
+        
         console.log(verb + ' : ' + requestUrl);
+        
         this.getRequestBody(() => {
             try {
                 const action: Action = AppContainer.getAction(requestUrl, verb, this.body);
