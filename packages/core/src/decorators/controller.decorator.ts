@@ -11,7 +11,7 @@ export function Controller(route: string) {
              * Add all controllers as service to be easier to resolve its dependencies.
              * A controller should not be injected!
              */
-            DependencyContainer.set({ type: target });
+            DependencyContainer.registerService(target);
         });
 
     };

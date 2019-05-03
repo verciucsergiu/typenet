@@ -1,4 +1,4 @@
-import { RequestBodyProvider } from "../src/utils/request-body-parser";
+import { RequestBodyProvider } from "../src/handlers/request-body-parser";
 import { expect } from 'chai';
 
 import * as mockReq from 'mock-req';
@@ -25,7 +25,7 @@ describe('Request body parser', () => {
     });
 
     describe('When request method is GET and has no body', () => {
-        it('should return an null', () => {
+        it('should return null', () => {
             const sut = new RequestBodyProvider();
             const request = new mockReq({ method: 'GET', url: 'none' });
 
