@@ -1,21 +1,21 @@
-import { ServerResponse, STATUS_CODES } from 'http';
-import { IActionResult } from '../http-responses';
+import { ServerResponse } from 'http';
+import { Response } from '../http-responses';
 
 export class ResponseHandler {
     constructor(private response: ServerResponse) {
     }
 
-    public handle(response: IActionResult | Promise<IActionResult>): void {
-        if (this.isActionResult(response)) {
+    public handle(response: Response | Promise<Response>): void {
+        if (this.isResponse(response)) {
             this.sendResponse(response);
         } else {
-            response.then((result: IActionResult) => {
+            response.then((result: Response) => {
                 this.sendResponse(result);
             });
         }
     }
 
-    private sendResponse(result: IActionResult): void {
+    private sendResponse(result: Response): void {
         this.response.writeHead(result.statusCode, { 'Content-Type': 'application/json' });
         let responseMessage: string = '';
         try {
@@ -27,7 +27,7 @@ export class ResponseHandler {
         this.response.end();
     }
 
-    private isActionResult(arg: any): arg is IActionResult {
+    private isResponse(arg: any): arg is Response {
         return arg.statusCode !== undefined;
     }
 }

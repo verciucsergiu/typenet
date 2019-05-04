@@ -3,13 +3,13 @@ import { DependencyContainer } from '../../injector';
 
 export class Action {
     constructor(
-        private contoller: ControllerContainerModel,
+        private controller: ControllerContainerModel,
         private method: any,
         private urlParams: Array<string>) {
     }
 
     public executeAction(): any {
-        const controllerInstance = DependencyContainer.getInstance(this.contoller.contoller);
+        const controllerInstance = DependencyContainer.resolve(this.controller.controller);
         return controllerInstance[this.method.name].apply(controllerInstance, this.urlParams);
     }
 }

@@ -1,3 +1,5 @@
+import 'reflect-metadata';
+
 export class DependencyContainer {
 
     public static readonly services: Function[] = [];
@@ -7,7 +9,7 @@ export class DependencyContainer {
         this.services[service.name] = Reflect.getMetadata('design:paramtypes', service);
     }
 
-    public static getInstance(classToInstantiate: Function): any {
+    public static resolve(classToInstantiate: Function): any {
         const instance = this.getInternalInstance(classToInstantiate);
         this.instances = [];
 

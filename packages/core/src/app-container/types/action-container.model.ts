@@ -12,7 +12,7 @@ export class ActionContainer {
         public method: any,
         public propKey: string) {
 
-        this.routes = UrlParser.parse(route);
+        this.routes = route != '' ? UrlParser.parse(route) : [];
     }
 
     public getActionParams(routes: Array<string>, requestBody: any): Array<any> {

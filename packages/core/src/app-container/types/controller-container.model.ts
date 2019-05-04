@@ -2,11 +2,11 @@ import { ActionContainer } from './action-container.model';
 
 export class ControllerContainerModel {
 
-    private actions: Array<ActionContainer> = new Array<ActionContainer>();
+    private actions: ActionContainer[] = [];
 
     constructor(
         public controllerName: string,
-        public contoller?: any,
+        public controller?: any,
         public path: string = '') {
     }
 

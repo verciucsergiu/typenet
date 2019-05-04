@@ -5,35 +5,20 @@ import { UrlParser } from './url-parser.helper';
 import { Action } from './types/action';
 import { NotFoundException } from '../server-exceptions/not-found.exception';
 import { AppParams } from '../decorators/models/app-params.model';
+import { ControllersContainer } from '../controller/controllers-container';
 
 export class AppContainer {
+    public static contollersContainer = new ControllersContainer();
 
-    /**
-     * App settings.
-     */
     public static settings: AppParams;
 
-    /**
-     * All controlles declared into the @WebApi decorator and are decorated with @Controller as well.
-     * This list is used when parsing a new request uri.
-     */
     private static controllers: ControllerContainerModel[] = [];
 
-    /**
-     * Pushes the given model into the controllers array.
-     * @param controller a new ControllerContainerModel that will be added to the controllers list
-     */
     public static addController(controller: ControllerContainerModel): void {
+        this.contollersContainer.addController(controller.path, controller.controller);
         this.controllers.push(controller);
     }
 
-    /**
-     * Adds a new ActionContainer to the controller methods list.
-     * @param verb GET, POST, PUT, PATCH, DELETE
-     * @param route string that represents the path to that metod
-     * @param method function that is called when a request is made to the route
-     * @param propKey that function name name
-     */
     public static addVerbToController(verb: string, route: string, method: any, propKey: string): void {
         const ctrl: ControllerContainerModel =
             this.controllers

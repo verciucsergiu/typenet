@@ -1,6 +1,6 @@
 import { Response } from './response';
-import { IActionResult } from './action-result.interface';
+import { ActionResult } from './action-result.interface';
 
-export class PayloadTooLarge extends Response implements IActionResult {
+export class PayloadTooLarge extends Response implements ActionResult {
     public statusCode: number = 413;
 }

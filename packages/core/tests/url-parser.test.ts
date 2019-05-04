@@ -5,9 +5,13 @@ import { UrlParser } from '../src/app-container/url-parser.helper';
 
 describe('Url parser', () => {
 
-    it('On given url should split after / ', () => {
+    it('Should split after / ', () => {
         const result = UrlParser.parse("test/1/3/4/appp");
 
         expect(result).to.be.an('array').and.deep.equal(['test', '1','3', '4', 'appp']);
     });
+
+    it('Should throw error for invalid url', () => {
+        expect(() => UrlParser.parse('/test/')).to.throw();
+    })
 });
