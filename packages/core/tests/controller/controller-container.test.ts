@@ -13,7 +13,7 @@ describe('Controller container', () => {
         it('Should create a route tree for each controller class', () => {
             const container = new ControllersContainer();
             container.addController('api/category/subcategory/thirdcategory', CategoryContoller);
-            const correspondingRouteTree = container.routesTree['api']['category']['subcategory']['thirdcategory'];
+            const correspondingRouteTree = container['routesTree']['api']['category']['subcategory']['thirdcategory'];
             expect(correspondingRouteTree).to.not.be.undefined;
             expect(correspondingRouteTree.__controllerType__).to.be.equal(CategoryContoller);
         });
@@ -22,8 +22,8 @@ describe('Controller container', () => {
             const container = new ControllersContainer();
             container.addController('api/category', CategoryContoller);
             container.addController('api/category/subcategory/thirdcategory', SubcategoryController);
-            const firstDepth = container.routesTree['api']['category'];
-            const secondDepth = container.routesTree['api']['category']['subcategory']['thirdcategory'];
+            const firstDepth = container['routesTree']['api']['category'];
+            const secondDepth = container['routesTree']['api']['category']['subcategory']['thirdcategory'];
             expect(firstDepth.__controllerType__).to.be.equal(CategoryContoller);
             expect(secondDepth.__controllerType__).to.be.equal(SubcategoryController);
         });
@@ -32,9 +32,9 @@ describe('Controller container', () => {
         it('should create paremeter tree when a route has a parameter', () => {
             const container = new ControllersContainer();
             container.addController('api/category', CategoryContoller);
-            container.addController('api/category/{categoryId}/subcategory', SubcategoryController);
+            container.addController('api/category/:categoryId/subcategory', SubcategoryController);
 
-            const firstDepth = container.routesTree['api']['category'];
+            const firstDepth = container['routesTree']['api']['category'];
             const secondDepth = firstDepth.__parameterTree__['subcategory'];
             expect(firstDepth.__controllerType__).to.be.equal(CategoryContoller);
             expect(secondDepth.__controllerType__).to.be.equal(SubcategoryController);
@@ -48,7 +48,7 @@ describe('Controller container', () => {
             container.addController('api/category', CategoryContoller);
             container.addController('api/category/subcategory/thirdcategory', SubcategoryController);
             
-            const controllers = container.resolveControllers('api/category');
+            const controllers = container['resolveControllers']('api/category');
             
             expect(controllers).to.be.deep.equal([CategoryContoller]);
         });
@@ -58,7 +58,7 @@ describe('Controller container', () => {
             container.addController('api/category', CategoryContoller);
             container.addController('api/category/subcategory/thirdcategory', SubcategoryController);
             
-            const controllers = container.resolveControllers('api/category/subcategory/thirdcategory/some-guid');
+            const controllers = container['resolveControllers']('api/category/subcategory/thirdcategory/some-guid');
             
             expect(controllers).to.be.deep.equal([CategoryContoller, SubcategoryController]);
         });
@@ -68,7 +68,7 @@ describe('Controller container', () => {
             container.addController('api/category', CategoryContoller);
             container.addController('api/category/subcategory/thirdcategory', SubcategoryController);
             
-            const controllers = container.resolveControllers('api/category/some-guid');
+            const controllers = container['resolveControllers']('api/category/some-guid');
             
             expect(controllers).to.be.deep.equal([CategoryContoller]);
         });
@@ -76,9 +76,9 @@ describe('Controller container', () => {
         it('should be abel to resolve including parameterized routes', () => {
             const container = new ControllersContainer();
             container.addController('api/category', CategoryContoller);
-            container.addController('api/category/{categoryId}/subcategory/thirdcategory', SubcategoryController);
+            container.addController('api/category/:categoryId/subcategory/thirdcategory', SubcategoryController);
             
-            const controllers = container.resolveControllers('api/category/8f93192d-6b7c-43e5-bb6c-51d1974dc5a6/subcategory/thirdcategory');
+            const controllers = container['resolveControllers']('api/category/8f93192d-6b7c-43e5-bb6c-51d1974dc5a6/subcategory/thirdcategory');
             
             expect(controllers).to.be.deep.equal([CategoryContoller, SubcategoryController]);
         });

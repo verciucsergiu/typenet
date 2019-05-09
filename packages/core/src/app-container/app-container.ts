@@ -1,30 +1,32 @@
 import { ControllerContainerModel } from './types/controller-container.model';
 import { ActionContainer } from './types/action-container.model';
 import { ActionParameter } from './types/action-parameter.model';
-import { UrlParser } from './url-parser.helper';
+import { UrlHelper } from './url-parser.helper';
 import { Action } from './types/action';
 import { NotFoundException } from '../server-exceptions/not-found.exception';
 import { AppParams } from '../decorators/models/app-params.model';
 import { ControllersContainer } from '../controller/controllers-container';
+import { HttpVerb } from '../controller/types';
 
 export class AppContainer {
-    public static contollersContainer = new ControllersContainer();
+    public static controllersContainer = new ControllersContainer();
 
     public static settings: AppParams;
 
     private static controllers: ControllerContainerModel[] = [];
 
     public static addController(controller: ControllerContainerModel): void {
-        this.contollersContainer.addController(controller.path, controller.controller);
+        this.controllersContainer.addController(controller.path, controller.controller);
         this.controllers.push(controller);
     }
 
-    public static addVerbToController(verb: string, route: string, method: any, propKey: string): void {
+    public static addMethod(verb: HttpVerb, route: string, method: any, methodName: string): void {
+        this.controllersContainer.addMethodDescriptor(verb, route, method.constructor.name, methodName);
         const ctrl: ControllerContainerModel =
             this.controllers
                 .find((controller: ControllerContainerModel) => controller.controllerName === method.constructor.name);
 
-        ctrl.addAction(new ActionContainer(route, verb, method, propKey));
+        ctrl.addAction(new ActionContainer(route, verb, method, methodName));
     }
 
     public static addMetadataToControllerMethod(controllerName: string, methodName: string, parameter: ActionParameter): void {
@@ -36,7 +38,7 @@ export class AppContainer {
     }
 
     public static getAction(requestUrl: string, verb: string, requestBody: any): Action {
-        const parsedUrl: Array<string> = UrlParser.parse(requestUrl);
+        const parsedUrl: Array<string> = UrlHelper.parse(requestUrl);
 
         let ctrl: ControllerContainerModel;
         let currentIndex: number = 0;

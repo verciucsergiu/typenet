@@ -1,31 +1,42 @@
-import { UrlParser } from "../app-container/url-parser.helper";
-import { RouteTree } from "./types";
+import { UrlHelper } from "../app-container/url-parser.helper";
+import { RouteTree, HttpVerb } from "./types";
+import { ControllerDescriptor } from "./controller-descriptor";
 
 export class ControllersContainer {
-    public routesTree: RouteTree = {};
+    private readonly routesTree: RouteTree = {};
+
+    private readonly controllerDescriptors: ControllerDescriptor[] = [];
 
     public addController(route: string, type: Function): void {
-        const parsedRoute = UrlParser.parse(route);
+        const parsedRoute = route != '' ? UrlHelper.parse(route) : [''];
         let currentTree = this.routesTree;
         for (const [index, segment] of parsedRoute.entries()) {
-            if (this.isParameter(segment)) {
+            if (UrlHelper.isParameter(segment)) {
                 currentTree.__parameterTree__ = {};
                 currentTree = currentTree.__parameterTree__;
             } else {
                 currentTree[segment] = currentTree[segment] || {};
                 currentTree = currentTree[segment];
-
-                if (index == parsedRoute.length - 1) {
-                    currentTree.__controllerType__ = type;
-                }
             }
-
+            
+            if (index === parsedRoute.length - 1) {
+                currentTree.__controllerType__ = type;
+            }
         }
     }
 
-    public resolveControllers(route: string): Function[] {
+    public addMethodDescriptor(verb: HttpVerb, route: string, controllerName: string, methodName: string): void {
+        if (!this.controllerDescriptors[controllerName]) {
+            this.controllerDescriptors[controllerName] = new ControllerDescriptor();
+        }
+
+        const descriptor = this.controllerDescriptors[controllerName];
+        descriptor.add(verb, route, methodName);
+    }
+
+    private resolveControllers(route: string): Function[] {
         let controllerTypes = [];
-        const parsedRoute = UrlParser.parse(route);
+        const parsedRoute = route != '' ? UrlHelper.parse(route) : [''];
         let currentTree = this.routesTree;
 
         for (const segment of parsedRoute) {
@@ -44,9 +55,5 @@ export class ControllersContainer {
         }
 
         return controllerTypes;
-    }
-
-    private isParameter(routeSegment: string): boolean {
-        return routeSegment.indexOf('{') !== -1;
     }
 }

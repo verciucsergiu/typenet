@@ -1,6 +1,6 @@
 import { ActionParameter } from './action-parameter.model';
 import { ParameterType } from './parameter.type';
-import { UrlParser } from '../url-parser.helper';
+import { UrlHelper } from '../url-parser.helper';
 
 export class ActionContainer {
     private routes: Array<string> = new Array<string>();
@@ -12,7 +12,7 @@ export class ActionContainer {
         public method: any,
         public propKey: string) {
 
-        this.routes = route != '' ? UrlParser.parse(route) : [];
+        this.routes = route != '' ? UrlHelper.parse(route) : [''];
     }
 
     public getActionParams(routes: Array<string>, requestBody: any): Array<any> {
@@ -51,7 +51,7 @@ export class ActionContainer {
 
         for (let index = 0; index < this.routes.length; index++) {
             const currentRouteIndex: string = this.routes[index];
-            if (currentRouteIndex[0] !== '{' && currentRouteIndex[currentRouteIndex.length - 1] !== '}') {
+            if (!UrlHelper.isParameter(currentRouteIndex)) {
                 if (routes[index] !== this.routes[index]) {
                     return false;
                 }
@@ -66,7 +66,7 @@ export class ActionContainer {
         const actualParams: Array<string> = new Array<string>();
         for (let index = 0; index < this.routes.length; index++) {
             const currentRouteIndex: string = this.routes[index];
-            if (currentRouteIndex[0] === '{' && currentRouteIndex[currentRouteIndex.length - 1] === '}') {
+            if (UrlHelper.isParameter(currentRouteIndex)) {
                 actualParams[currentRouteIndex] = routes[index];
             }
         }

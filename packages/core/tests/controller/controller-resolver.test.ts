@@ -16,8 +16,8 @@ describe('Controller resolver', () => {
         }
 
         
-        @HttpGet('{id}')
-        getById(@FromRoute('{id}') id: string): ActionResult {
+        @HttpGet(':id')
+        getById(@FromRoute(':id') id: string): ActionResult {
             return new Ok(id);
         }
     }
