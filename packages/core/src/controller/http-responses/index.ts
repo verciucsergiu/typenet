@@ -1,5 +1,5 @@
 export * from './bad-request';
-export * from './action-result.interface';
+export * from './action-result';
 export * from './created';
 export * from './forbidden';
 export * from './internal-server-error';

@@ -1,11 +1,10 @@
-import { Controller, ActionResult, Ok, HttpGet, HttpPost, Created, FromRoute } from "../../src";
+import { HttpGet, HttpPost, Controller, ActionResult, FromRoute, Ok, Created } from "../../src/controller";
 import { AppContainer } from "../../src/app-container/app-container";
 import { expect } from 'chai';
-import { DecoratorHandler } from "../../src/decorators/decorators-handler";
+import { DecoratorHandler } from "../../src/app-container/decorators-handler";
 
 describe('Controller resolver', () => {
     const label = 'find action to exectute';
-    // console.time(label);
 
     @Controller('api/test')
     class TestController {
@@ -15,7 +14,6 @@ describe('Controller resolver', () => {
             return new Ok();
         }
 
-        
         @HttpGet(':id')
         getById(@FromRoute(':id') id: string): ActionResult {
             return new Ok(id);
@@ -32,19 +30,19 @@ describe('Controller resolver', () => {
 
     DecoratorHandler.handle();
 
-    it('Should find get method from TestController', () => {
-        const action = AppContainer.getAction('api/test', 'GET', null);
-        expect((<any>action).controller.controllerName).to.be.equal(TestController.name);
-        expect((<any>action).method.name).to.be.equal("get");
-        // console.timeEnd(label);
+    it('Should find getById method from TestController but faster', () => {
+        console.time(label + 3);
+        const action = AppContainer.getActionCommand('GET', 'api/test/1', null);
+        console.timeEnd(label + 3);
+        expect((<any>action).controllerFunction.name).to.be.equal(TestController.name);
+        expect((<any>action).methodName).to.be.equal("getById");
     });
 
-
-    it('Should find getById method from TestController', () => {
-        const action = AppContainer.getAction('api/test/1', 'GET', null);
-        expect((<any>action).controller.controllerName).to.be.equal(TestController.name);
-        expect((<any>action).method.name).to.be.equal("getById");
-        // console.timeEnd(label);
+    it('Should find get method from TestController but faster', () => {
+        console.time(label + 4);
+        const action = AppContainer.getActionCommand('GET', 'api/test', null);
+        console.timeEnd(label + 4);
+        expect((<any>action).controllerFunction.name).to.be.equal(TestController.name);
+        expect((<any>action).methodName).to.be.equal("get");
     });
-    
 });

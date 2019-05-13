@@ -1,6 +1,8 @@
 import { UrlHelper } from "../app-container/url-parser.helper";
 import { RouteTree, HttpVerb } from "./types";
 import { ControllerDescriptor } from "./controller-descriptor";
+import { ActionCommand } from "./action.command";
+import { NotFoundException } from "../server-exceptions/not-found.exception";
 
 export class ControllersContainer {
     private readonly routesTree: RouteTree = {};
@@ -18,7 +20,7 @@ export class ControllersContainer {
                 currentTree[segment] = currentTree[segment] || {};
                 currentTree = currentTree[segment];
             }
-            
+
             if (index === parsedRoute.length - 1) {
                 currentTree.__controllerType__ = type;
             }
@@ -34,15 +36,38 @@ export class ControllersContainer {
         descriptor.add(verb, route, methodName);
     }
 
-    private resolveControllers(route: string): Function[] {
+    public resolveAction(verb: HttpVerb, route: string, body?: any): ActionCommand {
+        const controllers = this.resolveControllers(route);
+        const actions: ActionCommand[] = [];
+        for (const controller of controllers) {
+            const descriptor = <ControllerDescriptor>this.controllerDescriptors[controller.controller.name];
+            const method = descriptor.get(verb, controller.remainingRoute);
+
+            // BUILD METHOD PARAMETERS
+            const parameters = [];
+            actions.push(new ActionCommand(controller.controller, method, parameters));
+        }
+
+        if (actions.length > 1) {
+            throw new Error('Multiple matches for current request!');
+        }
+
+        if (actions.length == 0) {
+            throw new NotFoundException(`Action for the route "${route}" with method ${verb} was not found!`);
+        }
+
+        return actions[0];
+    }
+
+    private resolveControllers(route: string): { controller: Function, remainingRoute: string }[] {
         let controllerTypes = [];
         const parsedRoute = route != '' ? UrlHelper.parse(route) : [''];
         let currentTree = this.routesTree;
 
-        for (const segment of parsedRoute) {
+        for (const [index, segment] of parsedRoute.entries()) {
             if (currentTree[segment] !== undefined) {
                 if (currentTree[segment].__controllerType__ !== undefined) {
-                    controllerTypes.push(currentTree[segment].__controllerType__);
+                    controllerTypes.push({ controller: currentTree[segment].__controllerType__, remainingRoute: parsedRoute.slice(index + 1).join('/') });
                 }
                 currentTree = currentTree[segment];
             } else {

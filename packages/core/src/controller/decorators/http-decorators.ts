@@ -1,10 +1,13 @@
-import { HttpVerb } from "../../controller/types";
-import { DecoratorHandler } from "../decorators-handler";
+import { HttpVerb } from "../types";
+import { DecoratorHandler } from "../../app-container/decorators-handler";
 import { AppContainer } from "../../app-container/app-container";
+import { ActionResult } from "../http-responses";
+import { Observable } from "rxjs";
 
-function createVerbDecorator(verb: HttpVerb): any {
-    return (route: string): MethodDecorator => {
-        return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
+function createVerbDecorator(verb: HttpVerb) {
+    return (route: string) => {
+        return <F extends (...args) => ActionResult | Promise<ActionResult> | Observable<ActionResult>>
+            (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<F>) => {
             DecoratorHandler.addDecoratorAction(() => {
                 AppContainer.addMethod(verb, route, target, propertyKey);
             });

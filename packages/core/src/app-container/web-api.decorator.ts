@@ -1,5 +1,5 @@
-import { AppContainer } from '../app-container/app-container';
-import { AppDecorator } from './models/app.decorator.model';
+import { AppContainer } from './app-container';
+import { AppDecorator } from '../controller/decorators/models/app.decorator.model';
 
 export function WebApi(metadata: AppDecorator) {
     return (target: any) => {

@@ -1,7 +1,7 @@
 import * as http from 'http';
-import { AppParams } from './decorators/models/app-params.model';
+import { AppParams } from './controller/decorators/models/app-params.model';
 import { AppContainer } from './app-container/app-container';
-import { DecoratorHandler } from './decorators/decorators-handler';
+import { DecoratorHandler } from './app-container/decorators-handler';
 import { RequestHandler } from './handlers/request-handler';
 
 export class WebApiBuilder {
