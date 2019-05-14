@@ -5,15 +5,15 @@ import { DecoratorHandler } from './app-container/decorators-handler';
 import { RequestHandler } from './handlers/request-handler';
 
 export class WebApiBuilder {
-    private startupClass: any;
     private requestHandler = new RequestHandler();
+    private startupClass: any;
 
     public run(): void {
         const settings: AppParams = AppContainer.settings;
         DecoratorHandler.handle();
         http.createServer((request: http.IncomingMessage, response: http.ServerResponse) => {
             this.requestHandler.handle(request, response);
-        }).listen(settings.port);
+        }).listen(settings.port).setMaxListeners(0);
 
         console.log('Server is up and running at : http://localhost:' + settings.port);
     }

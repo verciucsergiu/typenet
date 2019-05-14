@@ -2,33 +2,32 @@ import { ServerResponse } from 'http';
 import { ActionResult, ControllerMethodReturnType } from '../controller/http-responses';
 
 export class ResponseHandler {
-    constructor(private serverResponse: ServerResponse) {
-    }
 
-    public handle(response: ControllerMethodReturnType): void {
+    public handle(response: ControllerMethodReturnType, serverResponse: ServerResponse): void {
         if (this.isResponse(response)) {
-            this.sendResponse(response);
+            this.sendResponse(response, serverResponse);
         } else if (this.isPomise(response)) {
             response.then((result: ActionResult) => {
-                this.sendResponse(result);
+                this.sendResponse(result, serverResponse);
             });
         } else {
-            response.subscribe((result) => {
-                this.sendResponse(result);
+            const subscription = response.subscribe((result) => {
+                this.sendResponse(result, serverResponse);
+                subscription.unsubscribe();
             });
         }
     }
 
-    private sendResponse(result: ActionResult): void {
-        this.serverResponse.writeHead(result.statusCode, { 'Content-Type': 'application/json' });
+    private sendResponse(result: ActionResult, serverResponse: ServerResponse): void {
+        serverResponse.writeHead(result.statusCode, { 'Content-Type': 'application/json' });
         let responseMessage: string = '';
         try {
             responseMessage = JSON.stringify(result.message);
         } catch {
-            responseMessage = '{ "message" : "' + result.message + '" }';
+            responseMessage = `{ "message" : " ${result.message}" }`;
         }
-        this.serverResponse.end(responseMessage);
-        this.serverResponse.end();
+        serverResponse.end(responseMessage);
+        serverResponse.end();
     }
 
     private isResponse(arg: any): arg is ActionResult {

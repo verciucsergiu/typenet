@@ -5,12 +5,13 @@
   "main": "index.js",
   "scripts": {
     "start": "node --inspect dist/",
-    "compile": "tsc --watch"
+    "compile": "tsc --watch",
+    "start:prod": "node dist/"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@typenet/core": "file:../../packages/core/typenet-core-0.0.1.tgz"
+    "@typenet/core": "file:../../packages/core/typenet-core-0.1.0.tgz"
   },
   "devDependencies": {
     "@types/mocha": "5.2.6",

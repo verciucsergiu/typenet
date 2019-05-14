@@ -1,4 +1,4 @@
-// import 'mocha';
+import 'mocha';
 
-// describe('Request handler tests', () => {
-// });
+describe('Request handler tests', () => {
+});
