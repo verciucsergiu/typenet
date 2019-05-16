@@ -47,7 +47,7 @@ describe('Injector tests', () => {
         const cservice = DependencyContainer.resolve(CService) as CService;
         cservice.aservice.counter = 300;
 
-        expect(cservice.bservice.aservice.counter).to.not.be.equal(300);
+        expect(cservice.bservice.aservice.counter).to.be.equal(300);
     });
 
     it('Should create new instances per request', () => {

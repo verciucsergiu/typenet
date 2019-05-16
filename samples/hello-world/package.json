@@ -11,7 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@typenet/core": "file:../../packages/core/typenet-core-0.1.0.tgz"
+    "@typenet/core": "file:../../packages/core/typenet-core-0.0.3.tgz"
   },
   "devDependencies": {
     "@types/mocha": "5.2.6",

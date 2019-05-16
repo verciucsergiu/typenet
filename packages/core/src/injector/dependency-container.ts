@@ -29,7 +29,7 @@ export class DependencyContainer {
             for (const arg of classArgs) {
                 params.push(this.getInternalInstance(arg));
             }
-            
+
             const instance = new classToInstantiate.prototype.constructor(...params);
             this.instances[classToInstantiate.name] = instance;
 
@@ -38,7 +38,7 @@ export class DependencyContainer {
             const instance = new classToInstantiate.prototype.constructor();
             this.instances[classToInstantiate.name] = instance;
             
-            return new classToInstantiate.prototype.constructor();
+            return instance;
         }
     }
 }
