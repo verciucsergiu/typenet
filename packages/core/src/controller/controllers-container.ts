@@ -1,20 +1,20 @@
-import { UrlHelper } from "../app-container/url-parser.helper";
 import { RouteTree, HttpVerb } from "./types";
 import { ControllerDescriptor } from "./controller-descriptor";
 import { ActionCommand } from "./action.command";
 import { NotFoundException } from "../server-exceptions/not-found.exception";
 import { ClassDefinition } from "../app-container/types/class-definition";
+import { Route } from "../app-container/route";
 
 export class ControllersContainer {
     private readonly routesTree: RouteTree = {};
 
     private readonly controllerDescriptors: ControllerDescriptor[] = [];
 
-    public addController(route: string, type: ClassDefinition): void {
-        const parsedRoute = route != '' ? UrlHelper.parse(route) : [''];
+    public addController(route: Route, type: ClassDefinition): void {
         let currentTree = this.routesTree;
-        for (const [index, segment] of parsedRoute.entries()) {
-            if (UrlHelper.isParameter(segment)) {
+        for (const [index, routeSegement] of route.entries()) {
+            const segment = routeSegement.toString();
+            if (routeSegement.isParameter) {
                 currentTree.__parameterTree__ = {};
                 currentTree = currentTree.__parameterTree__;
             } else {
@@ -22,13 +22,13 @@ export class ControllersContainer {
                 currentTree = currentTree[segment];
             }
 
-            if (index === parsedRoute.length - 1) {
+            if (index === route.length - 1) {
                 currentTree.__controllerType__ = type;
             }
         }
     }
 
-    public addMethodDescriptor(verb: HttpVerb, route: string, controllerName: string, methodName: string): void {
+    public addMethodDescriptor(verb: HttpVerb, route: Route, controllerName: string, methodName: string): void {
         if (!this.controllerDescriptors[controllerName]) {
             this.controllerDescriptors[controllerName] = new ControllerDescriptor();
         }
@@ -37,7 +37,7 @@ export class ControllersContainer {
         descriptor.add(verb, route, methodName);
     }
 
-    public resolveAction(verb: HttpVerb, route: string, body?: any): ActionCommand {
+    public resolveAction(verb: HttpVerb, route: Route): ActionCommand {
         const controllers = this.resolveControllers(route);
         const actions: ActionCommand[] = [];
         for (const controller of controllers) {
@@ -54,21 +54,25 @@ export class ControllersContainer {
         }
 
         if (actions.length == 0) {
-            throw new NotFoundException(`Action for the route "${route}" with method ${verb} was not found!`);
+            throw new NotFoundException(`Action for the route "${route.toString()}" with method ${verb} was not found!`);
         }
 
         return actions[0];
     }
 
-    private resolveControllers(route: string): { controller: ClassDefinition, remainingRoute: string }[] {
+    private resolveControllers(route: Route): { controller: ClassDefinition, remainingRoute: Route }[] {
         let controllerTypes = [];
-        const parsedRoute = route != '' ? UrlHelper.parse(route) : [''];
         let currentTree = this.routesTree;
 
-        for (const [index, segment] of parsedRoute.entries()) {
+        for (const [index, routeSegment] of route.entries()) {
+            const segment = routeSegment.toString();
             if (currentTree[segment] !== undefined) {
                 if (currentTree[segment].__controllerType__ !== undefined) {
-                    controllerTypes.push({ controller: currentTree[segment].__controllerType__, remainingRoute: parsedRoute.slice(index + 1).join('/') });
+                    controllerTypes.push(
+                        {
+                            controller: currentTree[segment].__controllerType__,
+                            remainingRoute: index + 1 != route.length ? route.slice(index + 1) : Route.empty()
+                        });
                 }
                 currentTree = currentTree[segment];
             } else {

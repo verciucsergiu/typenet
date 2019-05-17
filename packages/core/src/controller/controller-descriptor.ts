@@ -1,32 +1,31 @@
 import { MethodTree, HttpVerb } from "./types";
-import { UrlHelper } from "../app-container/url-parser.helper";
+import { Route } from "../app-container/route";
 
 export class ControllerDescriptor {
     private routesTree: MethodTree = {};
 
-    public add(verb: HttpVerb, route: string, methodName: string): void {
-        const parsedRoute = route != '' ? UrlHelper.parse(route) : [''];
+    public add(verb: HttpVerb, route: Route, methodName: string): void {
         let currentTree = this.routesTree;
-        for(const[index, segment] of parsedRoute.entries()) {
-            if(UrlHelper.isParameter(segment)) { 
+        for(const[index, segment] of route.entries()) {
+            if(segment.isParameter) { 
                 currentTree.__parameterTree__ = currentTree.__parameterTree__ || {};
                 currentTree = currentTree.__parameterTree__;
             } else {
-                currentTree[segment] = currentTree[segment] || {};
-                currentTree = currentTree[segment];
+                currentTree[segment.toString()] = currentTree[segment.toString()] || {};
+                currentTree = currentTree[segment.toString()];
             }
 
-            if(index === parsedRoute.length - 1) {
+            if(index === route.length - 1) {
                 currentTree[`__${verb.toLowerCase()}__`] = methodName as {};
             }
         }
     }
 
-    public get(verb: HttpVerb, route: string): string {
-        const parsedRoute = route != '' ? UrlHelper.parse(route) : [''];
+    public get(verb: HttpVerb, route: Route): string {
         let currentTree = this.routesTree;
 
-        for(const [index, segment] of parsedRoute.entries()) {
+        for(const [index, s] of route.entries()) {
+            const segment = s.toString();
             if(currentTree[segment] !== undefined) {
                 currentTree = currentTree[segment];
             } else {
@@ -35,7 +34,7 @@ export class ControllerDescriptor {
                 }
             }
 
-            if (index == parsedRoute.length - 1) {
+            if (index == route.length - 1) {
                 return currentTree[`__${verb.toLowerCase()}__`] as any || null;
             }
         }

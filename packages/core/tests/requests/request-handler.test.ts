@@ -7,11 +7,10 @@ import * as mockReq from 'mock-req';
 import * as mockRes from 'mock-res';
 
 import { IncomingMessage } from "http";
-import { RequestHandler } from '../../src/handlers/request-handler';
 import { RequestBodyProvider } from '../../src/handlers/request-body-parser';
-import { JsonResponseHandler } from '../../src/handlers/response-handler';
+import { JsonResponseHandler } from '../../src/handlers/json-response-handler';
 import { AppContainer } from '../../src/app-container/app-container';
-import { DecoratorHandler } from '../../src/app-container/decorators-handler';
+import { RequestHandler } from '../../src/handlers/request-handler';
 
 describe('Request handler tests', () => {
     const testResource = 'test/resource';
@@ -38,9 +37,20 @@ describe('Request handler tests', () => {
         get() {
             return new Ok(syncResponse);
         }
-    }
 
-    DecoratorHandler.handle();
+        @HttpGet('error')
+        throw() {
+            var result = () => {
+                throw new Error('something is wrong');
+            }
+            return new Ok(result());
+        }
+
+        @HttpGet('promiseError')
+        promiseError() {
+            return new Ok(Promise.reject('Resource not found!'));
+        }
+    }
 
 
     it('Should return the observable result', () => {
@@ -51,7 +61,6 @@ describe('Request handler tests', () => {
 
         sut.handle(req, response);
 
-        
         response.on('finish', () => {
             expect(response.statusCode as number).to.be.eq(200);
             expect(response._getJSON()).to.be.eq(observableResponse);
@@ -66,7 +75,6 @@ describe('Request handler tests', () => {
 
         sut.handle(req, response);
 
-        
         response.on('finish', () => {
             expect(response.statusCode as number).to.be.eq(200);
             expect(response._getJSON()).to.be.eq(promiseResponse);
@@ -81,10 +89,52 @@ describe('Request handler tests', () => {
 
         sut.handle(req, response);
 
-        
         response.on('finish', () => {
             expect(response.statusCode as number).to.be.eq(200);
             expect(response._getJSON()).to.be.eq(syncResponse);
+        });
+    });
+
+
+    it('Should handle exceptions', () => {
+        const req = new mockReq({ method: 'GET', url: `/${testResource}/error` }) as IncomingMessage;
+        const response = new mockRes();
+        AppContainer.settings = { port: 3000, maxRequestSize: 4096 };
+        const sut = new RequestHandler(new RequestBodyProvider(), new JsonResponseHandler());
+
+        sut.handle(req, response);
+
+        response.on('finish', () => {
+            expect(response.statusCode as number).to.be.eq(500);
+            expect(response._getJSON()).to.be.eq("Internal server error!");
+        });
+    });
+
+    it('Should handle promise rejections', () => {
+        const req = new mockReq({ method: 'GET', url: `/${testResource}/promiseError` }) as IncomingMessage;
+        const response = new mockRes();
+        AppContainer.settings = { port: 3000, maxRequestSize: 4096 };
+        const sut = new RequestHandler(new RequestBodyProvider(), new JsonResponseHandler());
+
+        sut.handle(req, response);
+
+        response.on('finish', () => {
+            expect(response.statusCode as number).to.be.eq(500);
+            expect(response._getJSON()).to.be.eq("Internal server error!");
+        });
+    });
+
+    it('Should return not found when invalid route provided', () => {
+        const req = new mockReq({ method: 'GET', url: `something` }) as IncomingMessage;
+        const response = new mockRes();
+        AppContainer.settings = { port: 3000, maxRequestSize: 4096 };
+        const sut = new RequestHandler(new RequestBodyProvider(), new JsonResponseHandler());
+
+        sut.handle(req, response);
+
+        response.on('finish', () => {
+            expect(response.statusCode as number).to.be.eq(404);
+            expect(response._getJSON()).to.be.eq("Not found!");
         });
     });
 });

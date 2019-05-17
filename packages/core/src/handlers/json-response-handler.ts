@@ -7,11 +7,15 @@ import { Observable } from 'rxjs';
 export class JsonResponseHandler {
 
     public handle(response: ControllerMethodReturnType, serverResponse: ServerResponse): void {
-        const {statusCode, message} = response;
-        if(this.isPromise(message)) {
-            message.then((result) => this.sendResponse(statusCode, result, serverResponse));
-        } else if (this.isObservable(message)){
-            message.subscribe((result) => this.sendResponse(statusCode, result, serverResponse));
+        const { statusCode, message } = response;
+        if (this.isPromise(message)) {
+            message
+                .then((result) => this.sendResponse(statusCode, result, serverResponse))
+                .catch(() => this.sendResponse(500, "Internal server error!", serverResponse));
+        } else if (this.isObservable(message)) {
+            message.subscribe(
+                (result) => this.sendResponse(statusCode, result, serverResponse),
+                () => this.sendResponse(500, "Internal server error!", serverResponse));
         } else {
             this.sendResponse(statusCode, message, serverResponse);
         }
@@ -24,16 +28,17 @@ export class JsonResponseHandler {
             responseMessage = JSON.stringify(message);
         } catch {
             responseMessage = `{ "message" : " ${message}" }`;
+        } finally {
+            serverResponse.write(responseMessage || '');
+            serverResponse.end();
         }
-        serverResponse.write(responseMessage);
-        serverResponse.end();
     }
 
     private isObservable<T>(arg: any): arg is Observable<T> {
-        return arg.subscribe !== undefined && arg.pipe !== undefined;
+        return arg && arg.subscribe && arg.pipe;
     }
 
     private isPromise<T>(arg: any): arg is Promise<T> {
-        return arg.then !== undefined && arg.catch !== undefined;
+        return arg && arg.then && arg.catch;
     }
 }
