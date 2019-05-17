@@ -3,9 +3,10 @@ import { AppParams } from './controller/decorators/models/app-params.model';
 import { AppContainer } from './app-container/app-container';
 import { DecoratorHandler } from './app-container/decorators-handler';
 import { RequestHandler } from './handlers/request-handler';
+import { DependencyContainer } from './injector';
 
 export class WebApiBuilder {
-    private requestHandler = new RequestHandler();
+    private requestHandler = DependencyContainer.resolve(RequestHandler);
     private startupClass: any;
 
     public run(): void {
@@ -22,4 +23,4 @@ export class WebApiBuilder {
         this.startupClass = startup;
         return this;
     }
-}
+}  

@@ -9,7 +9,7 @@ export class DependencyContainer {
         this.services[service.name] = Reflect.getMetadata('design:paramtypes', service);
     }
 
-    public static resolve(classToInstantiate: Function): any {
+    public static resolve<T>(classToInstantiate: new(...args: any[]) => T): T {
         const instance = this.getInternalInstance(classToInstantiate);
         this.instances = [];
 

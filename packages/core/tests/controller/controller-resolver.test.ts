@@ -1,7 +1,6 @@
 import { HttpGet, HttpPost, Controller, ActionResult, FromRoute, Ok, Created } from "../../src/controller";
 import { AppContainer } from "../../src/app-container/app-container";
 import { expect } from 'chai';
-import { DecoratorHandler } from "../../src/app-container/decorators-handler";
 
 describe('Controller resolver', () => {
     const label = 'find action to exectute';
@@ -27,8 +26,6 @@ describe('Controller resolver', () => {
             return new Created();
         }
     }
-
-    DecoratorHandler.handle();
 
     it('Should find getById method from TestController but faster', () => {
         console.time(label + 3);

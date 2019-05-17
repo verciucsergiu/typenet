@@ -1,7 +1,9 @@
 import { IncomingMessage } from "http";
 import { PayloadTooLargeException } from "../server-exceptions/payload-too-large.exception";
 import { Observable, Subject } from 'rxjs';
+import { Injectable } from "../injector";
 
+@Injectable()
 export class RequestBodyProvider {
     private bodySubject: Subject<any> = new Subject<any>();
 

@@ -3,13 +3,14 @@ import { RouteTree, HttpVerb } from "./types";
 import { ControllerDescriptor } from "./controller-descriptor";
 import { ActionCommand } from "./action.command";
 import { NotFoundException } from "../server-exceptions/not-found.exception";
+import { ClassDefinition } from "../app-container/types/class-definition";
 
 export class ControllersContainer {
     private readonly routesTree: RouteTree = {};
 
     private readonly controllerDescriptors: ControllerDescriptor[] = [];
 
-    public addController(route: string, type: Function): void {
+    public addController(route: string, type: ClassDefinition): void {
         const parsedRoute = route != '' ? UrlHelper.parse(route) : [''];
         let currentTree = this.routesTree;
         for (const [index, segment] of parsedRoute.entries()) {
@@ -59,7 +60,7 @@ export class ControllersContainer {
         return actions[0];
     }
 
-    private resolveControllers(route: string): { controller: Function, remainingRoute: string }[] {
+    private resolveControllers(route: string): { controller: ClassDefinition, remainingRoute: string }[] {
         let controllerTypes = [];
         const parsedRoute = route != '' ? UrlHelper.parse(route) : [''];
         let currentTree = this.routesTree;

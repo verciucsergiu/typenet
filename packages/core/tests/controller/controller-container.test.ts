@@ -27,7 +27,7 @@ describe('Controller container', () => {
             expect(firstDepth.__controllerType__).to.be.equal(CategoryContoller);
             expect(secondDepth.__controllerType__).to.be.equal(SubcategoryController);
         });
-        
+
 
         it('should create paremeter tree when a route has a parameter', () => {
             const container = new ControllersContainer();
@@ -47,40 +47,40 @@ describe('Controller container', () => {
             const container = new ControllersContainer();
             container.addController('api/category', CategoryContoller);
             container.addController('api/category/subcategory/thirdcategory', SubcategoryController);
-            
+
             const controllers = container['resolveControllers']('api/category');
-            
-            expect(controllers).to.be.deep.equal([CategoryContoller]);
+
+            expect(controllers).to.be.deep.equal([{ controller: CategoryContoller, remainingRoute: '' }]);
         });
 
         it('should resolve all potentials & relevant controllers types for deeper routes', () => {
             const container = new ControllersContainer();
             container.addController('api/category', CategoryContoller);
             container.addController('api/category/subcategory/thirdcategory', SubcategoryController);
-            
+
             const controllers = container['resolveControllers']('api/category/subcategory/thirdcategory/some-guid');
-            
-            expect(controllers).to.be.deep.equal([CategoryContoller, SubcategoryController]);
+
+            expect(controllers).to.be.deep.equal([{ controller: CategoryContoller, remainingRoute: 'subcategory/thirdcategory/some-guid' }, { controller: SubcategoryController, remainingRoute: 'some-guid' }]);
         });
 
         it('should exclude unrelevant controllers for inbetween routes', () => {
             const container = new ControllersContainer();
             container.addController('api/category', CategoryContoller);
             container.addController('api/category/subcategory/thirdcategory', SubcategoryController);
-            
+
             const controllers = container['resolveControllers']('api/category/some-guid');
-            
-            expect(controllers).to.be.deep.equal([CategoryContoller]);
+
+            expect(controllers).to.be.deep.equal([{ controller: CategoryContoller, remainingRoute: 'some-guid' }]);
         });
 
         it('should be abel to resolve including parameterized routes', () => {
             const container = new ControllersContainer();
             container.addController('api/category', CategoryContoller);
             container.addController('api/category/:categoryId/subcategory/thirdcategory', SubcategoryController);
-            
+
             const controllers = container['resolveControllers']('api/category/8f93192d-6b7c-43e5-bb6c-51d1974dc5a6/subcategory/thirdcategory');
-            
-            expect(controllers).to.be.deep.equal([CategoryContoller, SubcategoryController]);
+
+            expect(controllers).to.be.deep.equal([{ controller: CategoryContoller, remainingRoute: '8f93192d-6b7c-43e5-bb6c-51d1974dc5a6/subcategory/thirdcategory' }, { controller: SubcategoryController, remainingRoute: '' }]);
         });
     });
 

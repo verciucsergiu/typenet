@@ -3,13 +3,14 @@ import { ControllersContainer } from '../controller/controllers-container';
 import { HttpVerb } from '../controller/types';
 import { ActionCommand } from '../controller/action.command';
 import { ActionParameter } from './types/action-parameter.model';
+import { ClassDefinition } from './types/class-definition';
 
 export class AppContainer {
     public static controllersContainer = new ControllersContainer();
 
     public static settings: AppParams;
 
-    public static addController(route: string, controller: Function): void {
+    public static addController(route: string, controller: ClassDefinition): void {
         this.controllersContainer.addController(route, controller);
     }
 

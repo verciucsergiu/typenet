@@ -26,7 +26,7 @@ describe('Injector tests', () => {
 
     it('Should create an instance of the AService class', () => {
 
-        const bservice = DependencyContainer.resolve(BService) as BService;
+        const bservice = DependencyContainer.resolve(BService);
 
         const service = bservice.aservice;
 
@@ -34,7 +34,7 @@ describe('Injector tests', () => {
     });
 
     it('Should create an instance of AService and BService classes when CService is requested', () => {
-        const cservice = DependencyContainer.resolve(CService) as CService;
+        const cservice = DependencyContainer.resolve(CService);
 
         const bservice = cservice.bservice;
         const aservice = cservice.aservice;
@@ -44,16 +44,16 @@ describe('Injector tests', () => {
     });
 
     it('Should not create multiple instances of the same class in the same dependency tree', () => {
-        const cservice = DependencyContainer.resolve(CService) as CService;
+        const cservice = DependencyContainer.resolve(CService);
         cservice.aservice.counter = 300;
 
         expect(cservice.bservice.aservice.counter).to.be.equal(300);
     });
 
     it('Should create new instances per request', () => {
-        const cservice = DependencyContainer.resolve(CService) as CService;
+        const cservice = DependencyContainer.resolve(CService);
         cservice.aservice.counter = 300;
-        const secondService = DependencyContainer.resolve(CService) as CService;
+        const secondService = DependencyContainer.resolve(CService);
 
         expect(secondService.aservice.counter).to.not.be.equal(300);
     });

@@ -1,40 +1,39 @@
 import { ServerResponse } from 'http';
-import { ActionResult, ControllerMethodReturnType } from '../controller/http-responses';
+import { ControllerMethodReturnType } from '../controller/http-responses';
+import { Injectable } from '../injector';
+import { Observable } from 'rxjs';
 
-export class ResponseHandler {
+@Injectable()
+export class JsonResponseHandler {
 
     public handle(response: ControllerMethodReturnType, serverResponse: ServerResponse): void {
-        if (this.isResponse(response)) {
-            this.sendResponse(response, serverResponse);
-        } else if (this.isPomise(response)) {
-            response.then((result: ActionResult) => {
-                this.sendResponse(result, serverResponse);
-            });
+        const {statusCode, message} = response;
+        if(this.isPromise(message)) {
+            message.then((result) => this.sendResponse(statusCode, result, serverResponse));
+        } else if (this.isObservable(message)){
+            message.subscribe((result) => this.sendResponse(statusCode, result, serverResponse));
         } else {
-            const subscription = response.subscribe((result) => {
-                this.sendResponse(result, serverResponse);
-                subscription.unsubscribe();
-            });
+            this.sendResponse(statusCode, message, serverResponse);
         }
     }
 
-    private sendResponse(result: ActionResult, serverResponse: ServerResponse): void {
-        serverResponse.writeHead(result.statusCode, { 'Content-Type': 'application/json' });
+    private sendResponse(statusCode: number, message: Object, serverResponse: ServerResponse): void {
+        serverResponse.writeHead(statusCode, { 'Content-Type': 'application/json' });
         let responseMessage: string = '';
         try {
-            responseMessage = JSON.stringify(result.message);
+            responseMessage = JSON.stringify(message);
         } catch {
-            responseMessage = `{ "message" : " ${result.message}" }`;
+            responseMessage = `{ "message" : " ${message}" }`;
         }
-        serverResponse.end(responseMessage);
+        serverResponse.write(responseMessage);
         serverResponse.end();
     }
 
-    private isResponse(arg: any): arg is ActionResult {
-        return arg.statusCode !== undefined;
+    private isObservable<T>(arg: any): arg is Observable<T> {
+        return arg.subscribe !== undefined && arg.pipe !== undefined;
     }
 
-    private isPomise<T>(arg: any): arg is Promise<T> {
+    private isPromise<T>(arg: any): arg is Promise<T> {
         return arg.then !== undefined && arg.catch !== undefined;
     }
 }

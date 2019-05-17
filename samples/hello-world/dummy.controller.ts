@@ -1,4 +1,4 @@
-import { Controller, HttpGet, Ok, ActionResult  } from "@typenet/core/lib/src";
+import { Controller, HttpGet, Ok, ActionResult  } from "@typenet/core/src";
 
 @Controller('api/dummy')
 export class DummController {

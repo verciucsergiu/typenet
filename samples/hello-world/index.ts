@@ -1,4 +1,4 @@
-import { WebApi, WebApiBuilder } from '@typenet/core/lib/src';
+import { WebApi, WebApiBuilder } from '@typenet/core/src';
 import { DummController } from './dummy.controller';
 
 @WebApi({
