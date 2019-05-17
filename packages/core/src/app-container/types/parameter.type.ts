@@ -1,4 +1,1 @@
-export enum ParameterType {
-    FromRoute = 0,
-    FromBody = 1
-}
+export type ParameterType = 'body' | 'query' | 'route';

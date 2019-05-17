@@ -1,5 +1,5 @@
 import 'mocha';
-import { Controller, ActionResult, Ok, HttpGet } from '../../src';
+import { Controller, ActionResult, Ok, HttpGet, FromRoute, HttpPost, FromBody, Created } from '../../src';
 import { of } from 'rxjs';
 import { expect } from 'chai';
 
@@ -8,9 +8,10 @@ import * as mockRes from 'mock-res';
 
 import { IncomingMessage } from "http";
 import { RequestBodyProvider } from '../../src/handlers/request-body-parser';
-import { JsonResponseHandler } from '../../src/handlers/json-response-handler';
+import { JSONResponseHandler } from '../../src/handlers/json-response-handler';
 import { AppContainer } from '../../src/app-container/app-container';
 import { RequestHandler } from '../../src/handlers/request-handler';
+import { HttpContextFactory } from "../../src/controller/http-context-factory";
 
 describe('Request handler tests', () => {
     const testResource = 'test/resource';
@@ -22,11 +23,21 @@ describe('Request handler tests', () => {
     class ResourceController {
 
 
+        @HttpGet(':id')
+        getById(@FromRoute(':id') id: string): ActionResult {
+            return new Ok(id);
+        }
+
+        @HttpPost('')
+        create(@FromBody() body: any): ActionResult {
+            return new Created(body);
+        }
+
+
         @HttpGet('observable')
         getObservable(): ActionResult {
             return new Ok(of(observableResponse));
         }
-
 
         @HttpGet('promise')
         getPromise(): ActionResult {
@@ -57,7 +68,7 @@ describe('Request handler tests', () => {
         const req = new mockReq({ method: 'GET', url: `/${testResource}/observable` }) as IncomingMessage;
         const response = new mockRes();
         AppContainer.settings = { port: 3000, maxRequestSize: 4096 };
-        const sut = new RequestHandler(new RequestBodyProvider(), new JsonResponseHandler());
+        const sut = new RequestHandler(new HttpContextFactory(new RequestBodyProvider()), new JSONResponseHandler());
 
         sut.handle(req, response);
 
@@ -71,7 +82,7 @@ describe('Request handler tests', () => {
         const req = new mockReq({ method: 'GET', url: `/${testResource}/promise` }) as IncomingMessage;
         const response = new mockRes();
         AppContainer.settings = { port: 3000, maxRequestSize: 4096 };
-        const sut = new RequestHandler(new RequestBodyProvider(), new JsonResponseHandler());
+        const sut = new RequestHandler(new HttpContextFactory(new RequestBodyProvider()), new JSONResponseHandler());
 
         sut.handle(req, response);
 
@@ -85,7 +96,7 @@ describe('Request handler tests', () => {
         const req = new mockReq({ method: 'GET', url: `/${testResource}` }) as IncomingMessage;
         const response = new mockRes();
         AppContainer.settings = { port: 3000, maxRequestSize: 4096 };
-        const sut = new RequestHandler(new RequestBodyProvider(), new JsonResponseHandler());
+        const sut = new RequestHandler(new HttpContextFactory(new RequestBodyProvider()), new JSONResponseHandler());
 
         sut.handle(req, response);
 
@@ -100,7 +111,7 @@ describe('Request handler tests', () => {
         const req = new mockReq({ method: 'GET', url: `/${testResource}/error` }) as IncomingMessage;
         const response = new mockRes();
         AppContainer.settings = { port: 3000, maxRequestSize: 4096 };
-        const sut = new RequestHandler(new RequestBodyProvider(), new JsonResponseHandler());
+        const sut = new RequestHandler(new HttpContextFactory(new RequestBodyProvider()), new JSONResponseHandler());
 
         sut.handle(req, response);
 
@@ -114,7 +125,7 @@ describe('Request handler tests', () => {
         const req = new mockReq({ method: 'GET', url: `/${testResource}/promiseError` }) as IncomingMessage;
         const response = new mockRes();
         AppContainer.settings = { port: 3000, maxRequestSize: 4096 };
-        const sut = new RequestHandler(new RequestBodyProvider(), new JsonResponseHandler());
+        const sut = new RequestHandler(new HttpContextFactory(new RequestBodyProvider()), new JSONResponseHandler());
 
         sut.handle(req, response);
 
@@ -128,13 +139,47 @@ describe('Request handler tests', () => {
         const req = new mockReq({ method: 'GET', url: `something` }) as IncomingMessage;
         const response = new mockRes();
         AppContainer.settings = { port: 3000, maxRequestSize: 4096 };
-        const sut = new RequestHandler(new RequestBodyProvider(), new JsonResponseHandler());
+        const sut = new RequestHandler(new HttpContextFactory(new RequestBodyProvider()), new JSONResponseHandler());
 
         sut.handle(req, response);
 
         response.on('finish', () => {
             expect(response.statusCode as number).to.be.eq(404);
             expect(response._getJSON()).to.be.eq("Not found!");
+        });
+    });
+
+
+    it('Should inject from route', () => {
+        const expectedId = '902392';
+        const req = new mockReq({ method: 'GET', url: `/${testResource}/${expectedId}/` }) as IncomingMessage;
+        const response = new mockRes();
+        AppContainer.settings = { port: 3000, maxRequestSize: 4096 };
+        const sut = new RequestHandler(new HttpContextFactory(new RequestBodyProvider()), new JSONResponseHandler());
+
+        sut.handle(req, response);
+
+        response.on('finish', () => {
+            expect(response.statusCode as number).to.be.eq(200);
+            expect(response._getJSON()).to.be.eq(expectedId);
+        });
+    });
+
+    it('Should inject from body', () => {
+        const expected = { hello: "world" };
+        const req = new mockReq({ method: 'POST', url: `/${testResource}/` });
+        req.write(JSON.stringify(expected));
+        req.end();
+
+        const response = new mockRes();
+        AppContainer.settings = { port: 3000, maxRequestSize: 4096 };
+        const sut = new RequestHandler(new HttpContextFactory(new RequestBodyProvider()), new JSONResponseHandler());
+
+        sut.handle(req, response);
+
+        response.on('finish', () => {
+            expect(response.statusCode as number).to.be.eq(201);
+            expect(response._getJSON()).to.be.deep.eq(expected);
         });
     });
 });

@@ -1,15 +1,14 @@
-import { AppParams } from '../controller/decorators/models/app-params.model';
 import { ControllersContainer } from '../controller/controllers-container';
 import { HttpVerb } from '../controller/types';
 import { ActionCommand } from '../controller/action.command';
-import { ActionParameter } from './types/action-parameter.model';
 import { ClassDefinition } from './types/class-definition';
 import { Route } from './route';
+import { ParameterType } from './types/parameter.type';
 
 export class AppContainer {
     public static controllersContainer = new ControllersContainer();
-
-    public static settings: AppParams;
+    // TODO: REFACTOR
+    public static settings: any;
 
     public static addController(route: Route, controller: ClassDefinition): void {
         this.controllersContainer.addController(route, controller);
@@ -19,9 +18,8 @@ export class AppContainer {
         this.controllersContainer.addMethodDescriptor(verb, route, methodAsFunction.constructor.name, methodName);
     }
 
-    // TODO: REFACTOR FROM BODY & FROM ROUTE DECORATOR HANDLER
-    public static addMetadataToControllerMethod(controllerName: string, methodName: string, parameter: ActionParameter): void {
-        
+    public static addMethodParameter(controllerName: string, methodName: string, parameterIndex: number, parameterType: ParameterType, parameterName?: string): void {
+        this.controllersContainer.addMethodParameter(controllerName, methodName, parameterIndex, parameterType, parameterName);
     }
 
     public static getActionCommand(verb: HttpVerb, route: Route): ActionCommand {

@@ -17,7 +17,7 @@ describe('Request body parser', () => {
             request.write(JSON.stringify(expected));
             request.end();
 
-            sut.getBodyAsJson(request as IncomingMessage, 4096).subscribe(body => {
+            sut.getBodyAsJson(request as IncomingMessage, 4096).then(body => {
                 expect(body).to.deep.equal(expected);
             });
         });
@@ -29,7 +29,7 @@ describe('Request body parser', () => {
             const sut = new RequestBodyProvider();
             const request = new mockReq({ method: 'GET', url: 'none' });
 
-            sut.getBodyAsJson(request as IncomingMessage, 4096).subscribe(body => {
+            sut.getBodyAsJson(request as IncomingMessage, 4096).then(body => {
                 expect(body).to.deep.equal(null);
             });
         });

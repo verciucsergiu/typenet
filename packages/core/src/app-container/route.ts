@@ -1,25 +1,48 @@
 export class Route extends Array<RouteSegment> {
 
-    public static create(url: string): Route {
+    private constructor(items?: Array<RouteSegment>) {
+        super(...items);
+    }
+    
+    public static create(items?: Array<RouteSegment>): Route;
+    public static create(url: string): Route;
+    public static create(url: string | Array<RouteSegment>): Route {
+        if (this.isArray(url)) {
+            const interalRoute = this.createInternal();
+            interalRoute.push(...url);
+            return interalRoute;
+        } else {
+            return this.createInternalFromUrl(url);
+        }
+    }
+
+    public static empty(): Route {
+        const internalRoute = this.createInternal();
+        internalRoute.push(new RouteSegment(''));
+        return internalRoute;
+    }
+
+    public toString(): string {
+        return this.join('/');
+    }
+
+    private static createInternalFromUrl(url: string): Route {
         if (url) {
             const parsedRoute = url.toLowerCase().split('/');
             const indexOfEmptySegments = parsedRoute.indexOf('');
             if (indexOfEmptySegments > 0 && indexOfEmptySegments < parsedRoute.length - 1) {
                 throw new Error(`Invalid route: ${url}`);
             }
-
-            return parsedRoute.filter(x => x != '').map(x => new RouteSegment(x));
+            const internalRoute = this.createInternal();
+            internalRoute.push(...parsedRoute.filter(x => x != '').map(x => new RouteSegment(x)));
+            return internalRoute;
         } else {
             return Route.empty();
         }
     }
 
-    public static empty(): Route {
-        return [new RouteSegment('')];
-    }
-
-    public toString(): string {
-        return this.join('/');
+    private static createInternal(): Route {
+        return Object.create(Route.prototype);
     }
 }
 

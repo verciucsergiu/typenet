@@ -5,7 +5,11 @@ import { Route } from "../../app-container/route";
 
 export function Controller(route: string) {
     return (target: ClassDefinition) => {
-        AppContainer.addController(Route.create(route), target);
-        DependencyContainer.registerService(target);
+        if (route) {
+            AppContainer.addController(Route.create(route), target);
+            DependencyContainer.registerService(target);
+        } else {
+            throw new Error(`Invalid route for controller: ${target.constructor.name}`);
+        }
     };
 }

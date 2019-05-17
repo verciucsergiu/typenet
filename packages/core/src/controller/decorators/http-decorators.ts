@@ -13,8 +13,8 @@ function createVerbDecorator(verb: HttpVerb) {
     }
 }
 
-export let HttpGet = createVerbDecorator('GET');
-export let HttpPost = createVerbDecorator('POST');
-export let HttpPut = createVerbDecorator('PUT');
-export let HttpDelete = createVerbDecorator('DELETE');
-export let HttpPatch = createVerbDecorator('PATCH');
+export const HttpGet = createVerbDecorator('GET');
+export const HttpPost = createVerbDecorator('POST');
+export const HttpPut = createVerbDecorator('PUT');
+export const HttpDelete = createVerbDecorator('DELETE');
+export const HttpPatch = createVerbDecorator('PATCH');

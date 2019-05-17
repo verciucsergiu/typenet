@@ -4,7 +4,7 @@ import { Injectable } from '../injector';
 import { Observable } from 'rxjs';
 
 @Injectable()
-export class JsonResponseHandler {
+export class JSONResponseHandler {
 
     public handle(response: ControllerMethodReturnType, serverResponse: ServerResponse): void {
         const { statusCode, message } = response;

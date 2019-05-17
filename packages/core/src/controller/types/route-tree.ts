@@ -13,13 +13,15 @@ interface MethodTreeArray extends Tree<MethodTree> {
 export type RouteTree = RouteTreeArray & {
     __controllerType__?: ClassDefinition;
     __parameterTree__?: RouteTree;
+    __parameterName___?: string;
 }
 
 export type MethodTree = MethodTreeArray & {
-    __parameterTree__?: MethodTree,
-    __get__?: string,
+    __parameterTree__?: MethodTree;
+    __parameterName__?: string;
+    __get__?: string;
     __post__?: string
-    __put__?: string,
-    __delete__?: string,
-    __patch__?: string,
+    __put__?: string;
+    __delete__?: string;
+    __patch__?: string;
 }
