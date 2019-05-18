@@ -1,7 +1,7 @@
 import { HttpGet, HttpPost, Controller, ActionResult, FromRoute, Ok, Created } from "../../src/controller";
-import { AppContainer } from "../../src/app-container/app-container";
+import { ApplicationContainer } from "../../src/application/application-container";
 import { expect } from 'chai';
-import { Route } from "../../src/app-container/route";
+import { Route } from "../../src/routing/route";
 
 describe('Controller resolver', () => {
 
@@ -41,13 +41,13 @@ describe('Controller resolver', () => {
     }
 
     it('Should find getById method from TestController', () => {
-        const action = AppContainer.getActionCommand('POST', Route.create('api/test/1'));
+        const action = ApplicationContainer.getActionCommand('POST', Route.create('api/test/1'));
         expect((<any>action).controllerFunction.name).to.be.equal(TestController.name);
         expect((<any>action).methodName).to.be.equal("getById");
     });
 
     it('Should find get method from TestController', () => {
-        const action = AppContainer.getActionCommand('GET', Route.create('api/test'));
+        const action = ApplicationContainer.getActionCommand('GET', Route.create('api/test'));
         expect((<any>action).controllerFunction.name).to.be.equal(TestController.name);
         expect((<any>action).methodName).to.be.equal("get");
     });
@@ -55,7 +55,7 @@ describe('Controller resolver', () => {
     it('Should create parameter route accordingly', () => {
         const expectedRouteParameters = { ':id': 2, ':subtestid': 3 };
 
-        const action = AppContainer.getActionCommand('GET', Route.create('api/test/20/30'));
+        const action = ApplicationContainer.getActionCommand('GET', Route.create('api/test/20/30'));
         expect((<any>action).controllerFunction.name).to.be.equal(SubTestController.name);
         expect((<any>action).methodName).to.be.equal("getById");
         expect((<any>action).routeParameters).to.include(expectedRouteParameters);

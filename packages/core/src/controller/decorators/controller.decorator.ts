@@ -1,12 +1,12 @@
-import { AppContainer } from "../../app-container/app-container";
+import { ApplicationContainer } from "../../application/application-container";
 import { DependencyContainer } from "../../injector";
-import { ClassDefinition } from "../../app-container/types/class-definition";
-import { Route } from "../../app-container/route";
+import { ClassDefinition } from "../../application/types/class-definition";
+import { Route } from "../../routing/route";
 
 export function Controller(route: string) {
     return (target: ClassDefinition) => {
         if (route) {
-            AppContainer.addController(Route.create(route), target);
+            ApplicationContainer.addController(Route.create(route), target);
             DependencyContainer.registerService(target);
         } else {
             throw new Error(`Invalid route for controller: ${target.constructor.name}`);

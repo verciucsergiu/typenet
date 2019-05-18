@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
-import { Route, RouteSegment } from '../src/app-container/route';
+import { Route, RouteSegment } from '../../src/routing/route';
 
 describe('Route', () => {
 

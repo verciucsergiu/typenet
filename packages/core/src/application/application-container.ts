@@ -2,13 +2,11 @@ import { ControllersContainer } from '../controller/controllers-container';
 import { HttpVerb } from '../controller/types';
 import { ActionCommand } from '../controller/action.command';
 import { ClassDefinition } from './types/class-definition';
-import { Route } from './route';
-import { ParameterType } from './types/parameter.type';
+import { Route } from '../routing/route';
+import { ParameterType } from '../controller/types/parameter.type';
 
-export class AppContainer {
+export class ApplicationContainer {
     public static controllersContainer = new ControllersContainer();
-    // TODO: REFACTOR
-    public static settings: any;
 
     public static addController(route: Route, controller: ClassDefinition): void {
         this.controllersContainer.addController(route, controller);

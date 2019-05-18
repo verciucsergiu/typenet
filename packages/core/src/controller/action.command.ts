@@ -1,9 +1,9 @@
-import { ControllerMethodReturnType, Ok } from "./http-responses";
 import { DependencyContainer } from "../injector";
-import { ClassDefinition } from "../app-container/types/class-definition";
+import { ClassDefinition } from "../application/types/class-definition";
 import { HttpContext } from "./types/http-context";
-import { RouteParameter } from "./route-parameter";
-import { MethodParameterType } from "./types/method-parameter-metadata";
+import { RouteParameter } from "../routing/route-parameter";
+import { MethodParameterType } from "../routing/method-parameter-metadata";
+import { ActionResult } from "./http-responses";
 
 export class ActionCommand {
 
@@ -14,7 +14,7 @@ export class ActionCommand {
         private readonly methodParameters: MethodParameterType[]) {
     }
 
-    public async execute(httpContext: HttpContext): Promise<ControllerMethodReturnType> {
+    public async execute(httpContext: HttpContext): Promise<ActionResult> {
         const controllerInstance = DependencyContainer.resolve(this.controllerFunction);
         const params = await this.buildParameters(httpContext);
         return controllerInstance[this.methodName](...params);

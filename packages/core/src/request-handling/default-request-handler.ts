@@ -2,25 +2,29 @@ import { ServerResponse, IncomingMessage } from 'http';
 import { JSONResponseHandler } from './json-response-handler';
 import { NotFoundException } from '../server-exceptions/not-found.exception';
 import { NotFound, InternalServerError } from '../controller/http-responses';
-import { AppContainer } from '../app-container/app-container';
+import { ApplicationContainer } from '../application/application-container';
 import { HttpVerb } from '../controller/types';
-import { Injectable } from '../injector';
-import { Route } from '../app-container/route';
+import { Injectable, DependencyContainer } from '../injector';
+import { Route } from '../routing/route';
 import { HttpContextFactory } from "../controller/http-context-factory";
+import { RequestHandler } from './request-handler';
 
 @Injectable()
-export class RequestHandler {
+export class DefaultRequestHandler implements RequestHandler {
 
     constructor(
         private readonly httpContextFactory: HttpContextFactory,
         private readonly responseHandler: JSONResponseHandler) {
     }
 
-    public async handle(request: IncomingMessage, response: ServerResponse): Promise<any> {
+    public async handle(request: IncomingMessage, response: ServerResponse): Promise<void> {
+        // FIX CONCURENCY SCOPE CREATION
+        DependencyContainer.createScope();
+
         const verb = request.method.toUpperCase() as HttpVerb;
         const httpContext = this.httpContextFactory.create(request);
         try {
-            const action = AppContainer.getActionCommand(verb, Route.create(request.url));
+            const action = ApplicationContainer.getActionCommand(verb, Route.create(request.url));
             this.responseHandler.handle(await action.execute(httpContext), response);
         } catch (e) {
             if (e instanceof NotFoundException) {

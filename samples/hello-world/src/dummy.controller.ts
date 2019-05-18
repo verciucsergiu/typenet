@@ -1,7 +1,7 @@
-import { Controller, HttpGet, Ok, ActionResult  } from "@typenet/core/src";
+import { Controller, HttpGet, ActionResult, Ok } from '@typenet/core';
 
 @Controller('api/dummy')
-export class DummController {
+export class DummyController {
 
     @HttpGet('')
     public helloWorld(): ActionResult {

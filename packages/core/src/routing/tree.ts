@@ -1,6 +1,6 @@
-import { ClassDefinition } from "../../app-container/types/class-definition";
+import { ClassDefinition } from "../application/types/class-definition";
 
-interface Tree<T> {
+export interface Tree<T> {
     [routeSegment: string]: T;
 }
 

@@ -1,6 +1,6 @@
-import { HttpVerb } from ".";
+import { HttpVerb } from "./http-verb";
 import { HttpHeaders } from "./http-headers";
-import { Route } from "../../app-container/route";
+import { Route } from "../../routing/route";
 
 export interface HttpContext {
     httpVersion: string;

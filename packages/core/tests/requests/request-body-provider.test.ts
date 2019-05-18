@@ -1,4 +1,4 @@
-import { RequestBodyProvider } from "../src/handlers/request-body-parser";
+import { RequestBodyProvider } from "../../src/request-handling/request-body-parser";
 import { expect } from 'chai';
 
 import * as mockReq from 'mock-req';

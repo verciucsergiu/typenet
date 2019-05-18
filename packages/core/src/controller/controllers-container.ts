@@ -2,12 +2,12 @@ import { HttpVerb } from "./types";
 import { ControllerDescriptor } from "./controller-descriptor";
 import { ActionCommand } from "./action.command";
 import { NotFoundException } from "../server-exceptions/not-found.exception";
-import { ClassDefinition } from "../app-container/types/class-definition";
-import { Route } from "../app-container/route";
-import { RouteParameter } from "./route-parameter";
-import { RouteTree } from "./types/route-tree";
-import { MethodParameterMetadata, MethodParameterType } from "./types/method-parameter-metadata";
-import { ParameterType } from "../app-container/types/parameter.type";
+import { ClassDefinition } from "../application/types/class-definition";
+import { Route } from "../routing/route";
+import { RouteParameter } from "../routing/route-parameter";
+import { RouteTree } from "../routing/tree";
+import { MethodParameterMetadata, MethodParameterType } from "../routing/method-parameter-metadata";
+import { ParameterType } from "./types/parameter.type";
 
 export class ControllersContainer {
     private readonly routesTree: RouteTree = {};

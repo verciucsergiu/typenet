@@ -1,7 +1,7 @@
 import { ControllersContainer } from "../../src/controller/controllers-container";
 import { expect } from 'chai';
-import { Route } from "../../src/app-container/route";
-import { RouteParameter } from "../../src/controller/route-parameter";
+import { Route } from "../../src/routing/route";
+import { RouteParameter } from "../../src/routing/route-parameter";
 
 describe('Controller container', () => {
 

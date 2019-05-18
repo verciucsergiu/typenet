@@ -1,7 +1,7 @@
 import { HttpVerb } from "./types";
-import { Route } from "../app-container/route";
-import { MethodTree } from "./types/route-tree";
-import { RouteParameter } from "./route-parameter";
+import { Route } from "../routing/route";
+import { MethodTree } from "../routing/tree";
+import { RouteParameter } from "../routing/route-parameter";
 
 export class ControllerDescriptor {
     private routesTree: MethodTree = {};

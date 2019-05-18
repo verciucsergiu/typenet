@@ -1,12 +1,13 @@
 import { ServerResponse } from 'http';
-import { ControllerMethodReturnType } from '../controller/http-responses';
 import { Injectable } from '../injector';
 import { Observable } from 'rxjs';
+import { ActionResult } from '../controller';
+import { ResponseHandler } from './response-handler';
 
 @Injectable()
-export class JSONResponseHandler {
+export class JSONResponseHandler implements ResponseHandler {
 
-    public handle(response: ControllerMethodReturnType, serverResponse: ServerResponse): void {
+    public handle(response: ActionResult, serverResponse: ServerResponse): void {
         const { statusCode, message } = response;
         if (this.isPromise(message)) {
             message

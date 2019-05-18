@@ -6,5 +6,3 @@ export interface ActionResult {
 }
 
 export type ResponseMessageType = string | number | Object | Promise<Object> | Observable<Object>; 
-
-export type ControllerMethodReturnType = ActionResult;

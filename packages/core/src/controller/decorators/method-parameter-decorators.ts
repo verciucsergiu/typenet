@@ -1,8 +1,8 @@
-import { AppContainer } from '../../app-container/app-container';
+import { ApplicationContainer } from '../../application/application-container';
 
 export function FromRoute(parameterName: string) {
     return (target: Object, methodName: string, parameterIndex: number) => {
-        AppContainer.addMethodParameter(
+        ApplicationContainer.addMethodParameter(
             target.constructor.name,
             methodName,
             parameterIndex,
@@ -14,7 +14,7 @@ export function FromRoute(parameterName: string) {
 
 export function FromBody() {
     return (target: Object, methodName: string, parameterIndex: number) => {
-        AppContainer.addMethodParameter(
+        ApplicationContainer.addMethodParameter(
             target.constructor.name,
             methodName,
             parameterIndex,
@@ -25,7 +25,7 @@ export function FromBody() {
 
 export function FromQuery() {
     return (target: Object, methodName: string, parameterIndex: number) => {
-        AppContainer.addMethodParameter(
+        ApplicationContainer.addMethodParameter(
             target.constructor.name,
             methodName,
             parameterIndex,

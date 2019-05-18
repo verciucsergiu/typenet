@@ -7,11 +7,11 @@ import * as mockReq from 'mock-req';
 import * as mockRes from 'mock-res';
 
 import { IncomingMessage } from "http";
-import { RequestBodyProvider } from '../../src/handlers/request-body-parser';
-import { JSONResponseHandler } from '../../src/handlers/json-response-handler';
-import { AppContainer } from '../../src/app-container/app-container';
-import { RequestHandler } from '../../src/handlers/request-handler';
+import { RequestBodyProvider } from '../../src/request-handling/request-body-parser';
+import { JSONResponseHandler } from '../../src/request-handling/json-response-handler';
+import { DefaultRequestHandler } from '../../src/request-handling/default-request-handler';
 import { HttpContextFactory } from "../../src/controller/http-context-factory";
+import { ApplicationSettings } from '../../src/application';
 
 describe('Request handler tests', () => {
     const testResource = 'test/resource';
@@ -67,8 +67,7 @@ describe('Request handler tests', () => {
     it('Should return the observable result', () => {
         const req = new mockReq({ method: 'GET', url: `/${testResource}/observable` }) as IncomingMessage;
         const response = new mockRes();
-        AppContainer.settings = { port: 3000, maxRequestSize: 4096 };
-        const sut = new RequestHandler(new HttpContextFactory(new RequestBodyProvider()), new JSONResponseHandler());
+        const sut = new DefaultRequestHandler(new HttpContextFactory(new RequestBodyProvider(), ApplicationSettings.defaultSettings()), new JSONResponseHandler());
 
         sut.handle(req, response);
 
@@ -81,8 +80,7 @@ describe('Request handler tests', () => {
     it('Should return the promise result', () => {
         const req = new mockReq({ method: 'GET', url: `/${testResource}/promise` }) as IncomingMessage;
         const response = new mockRes();
-        AppContainer.settings = { port: 3000, maxRequestSize: 4096 };
-        const sut = new RequestHandler(new HttpContextFactory(new RequestBodyProvider()), new JSONResponseHandler());
+        const sut = new DefaultRequestHandler(new HttpContextFactory(new RequestBodyProvider(), ApplicationSettings.defaultSettings()), new JSONResponseHandler());
 
         sut.handle(req, response);
 
@@ -95,8 +93,7 @@ describe('Request handler tests', () => {
     it('Should return the sync result', () => {
         const req = new mockReq({ method: 'GET', url: `/${testResource}` }) as IncomingMessage;
         const response = new mockRes();
-        AppContainer.settings = { port: 3000, maxRequestSize: 4096 };
-        const sut = new RequestHandler(new HttpContextFactory(new RequestBodyProvider()), new JSONResponseHandler());
+        const sut = new DefaultRequestHandler(new HttpContextFactory(new RequestBodyProvider(), ApplicationSettings.defaultSettings()), new JSONResponseHandler());
 
         sut.handle(req, response);
 
@@ -110,8 +107,7 @@ describe('Request handler tests', () => {
     it('Should handle exceptions', () => {
         const req = new mockReq({ method: 'GET', url: `/${testResource}/error` }) as IncomingMessage;
         const response = new mockRes();
-        AppContainer.settings = { port: 3000, maxRequestSize: 4096 };
-        const sut = new RequestHandler(new HttpContextFactory(new RequestBodyProvider()), new JSONResponseHandler());
+        const sut = new DefaultRequestHandler(new HttpContextFactory(new RequestBodyProvider(), ApplicationSettings.defaultSettings()), new JSONResponseHandler());
 
         sut.handle(req, response);
 
@@ -124,8 +120,7 @@ describe('Request handler tests', () => {
     it('Should handle promise rejections', () => {
         const req = new mockReq({ method: 'GET', url: `/${testResource}/promiseError` }) as IncomingMessage;
         const response = new mockRes();
-        AppContainer.settings = { port: 3000, maxRequestSize: 4096 };
-        const sut = new RequestHandler(new HttpContextFactory(new RequestBodyProvider()), new JSONResponseHandler());
+        const sut = new DefaultRequestHandler(new HttpContextFactory(new RequestBodyProvider(), ApplicationSettings.defaultSettings()), new JSONResponseHandler());
 
         sut.handle(req, response);
 
@@ -138,8 +133,7 @@ describe('Request handler tests', () => {
     it('Should return not found when invalid route provided', () => {
         const req = new mockReq({ method: 'GET', url: `something` }) as IncomingMessage;
         const response = new mockRes();
-        AppContainer.settings = { port: 3000, maxRequestSize: 4096 };
-        const sut = new RequestHandler(new HttpContextFactory(new RequestBodyProvider()), new JSONResponseHandler());
+        const sut = new DefaultRequestHandler(new HttpContextFactory(new RequestBodyProvider(), ApplicationSettings.defaultSettings()), new JSONResponseHandler());
 
         sut.handle(req, response);
 
@@ -154,8 +148,7 @@ describe('Request handler tests', () => {
         const expectedId = '902392';
         const req = new mockReq({ method: 'GET', url: `/${testResource}/${expectedId}/` }) as IncomingMessage;
         const response = new mockRes();
-        AppContainer.settings = { port: 3000, maxRequestSize: 4096 };
-        const sut = new RequestHandler(new HttpContextFactory(new RequestBodyProvider()), new JSONResponseHandler());
+        const sut = new DefaultRequestHandler(new HttpContextFactory(new RequestBodyProvider(), ApplicationSettings.defaultSettings()), new JSONResponseHandler());
 
         sut.handle(req, response);
 
@@ -172,8 +165,7 @@ describe('Request handler tests', () => {
         req.end();
 
         const response = new mockRes();
-        AppContainer.settings = { port: 3000, maxRequestSize: 4096 };
-        const sut = new RequestHandler(new HttpContextFactory(new RequestBodyProvider()), new JSONResponseHandler());
+        const sut = new DefaultRequestHandler(new HttpContextFactory(new RequestBodyProvider(), ApplicationSettings.defaultSettings()), new JSONResponseHandler());
 
         sut.handle(req, response);
 

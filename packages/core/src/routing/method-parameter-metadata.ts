@@ -1,4 +1,4 @@
-import { ParameterType } from "../../app-container/types/parameter.type";
+import { ParameterType } from "../controller/types/parameter.type";
 
 export interface MethodParameterMetadata {
     [identifier: string]: MethodParameterDescriptor;

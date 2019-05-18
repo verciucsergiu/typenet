@@ -1,14 +1,14 @@
 import { HttpVerb } from "../types";
-import { AppContainer } from "../../app-container/app-container";
+import { ApplicationContainer } from "../../application/application-container";
 import { ActionResult } from "../http-responses";
 import { Observable } from "rxjs";
-import { Route } from "../../app-container/route";
+import { Route } from "../../routing/route";
 
 function createVerbDecorator(verb: HttpVerb) {
     return (route: string) => {
         return <F extends (...args) => ActionResult | Promise<ActionResult> | Observable<ActionResult>>
             (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<F>) => {
-            AppContainer.addMethod(verb, Route.create(route), target, propertyKey);
+            ApplicationContainer.addMethod(verb, Route.create(route), target, propertyKey);
         };
     }
 }
