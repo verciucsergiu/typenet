@@ -4,17 +4,18 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node --inspect dist/",
-    "compile": "tsc --watch"
+    "start": "node --inspect dist/src",
+    "compile": "tsc --watch",
+    "start:prod": "node dist/"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@typenet/core": "file:../../packages/core/typenet-core-0.0.1.tgz"
+    "@typenet/core": "file:../../packages/core/typenet-core-0.0.6.tgz"
   },
   "devDependencies": {
     "@types/mocha": "5.2.6",
     "@types/node": "11.11.3",
-    "typescript": "3.3.3333"
+    "typescript": "3.4.5"
   }
 }

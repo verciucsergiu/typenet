@@ -1,13 +1,18 @@
 {
   "name": "@typenet/core",
-  "version": "0.0.1",
+  "version": "0.0.6",
   "description": "@typenet/core package",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "scripts": {
-    "build": "tsc",
+    "build": "npm run remove-lib && npm run compile && npm run remove-tests && npm run move-src-to-root && move lib\\src\\* lib && npm run remove-lib-src",
     "prepare": "npm run build",
-    "test": "mocha --require ts-node/register tests/**/*.ts"
+    "test": "mocha --require ts-node/register tests/**/*.ts",
+    "remove-lib": "if exist \"lib\" rd /S /Q lib",
+    "remove-tests": "rd /S /Q \"lib/tests\"",
+    "move-src-to-root": "for /r ./lib/src %a in (.) do @move %a ./lib",
+    "remove-lib-src": "rd /S /Q \"lib/src\"",
+    "compile": "tsc -p ."
   },
   "author": "Sergiu Verciuc",
   "license": "ISC",
@@ -26,7 +31,7 @@
     "mock-res": "^0.5.0",
     "sinon": "^7.3.2",
     "ts-node": "^8.1.0",
-    "typescript": "3.3.3333"
+    "typescript": "3.4.3"
   },
   "files": [
     "lib/**/*"
