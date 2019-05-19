@@ -1,2 +1,1 @@
-export * from './decorators/injectable';
-export * from './dependency-container';
+export * from './decorators/injectable.decorator';

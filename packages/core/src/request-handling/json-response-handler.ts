@@ -12,14 +12,18 @@ export class JSONResponseHandler implements ResponseHandler {
         if (this.isPromise(message)) {
             message
                 .then((result) => this.sendResponse(statusCode, result, serverResponse))
-                .catch(() => this.sendResponse(500, "Internal server error!", serverResponse));
+                .catch(() => this.handleUncaughtException(serverResponse));
         } else if (this.isObservable(message)) {
             message.subscribe(
                 (result) => this.sendResponse(statusCode, result, serverResponse),
-                () => this.sendResponse(500, "Internal server error!", serverResponse));
+                () => this.handleUncaughtException(serverResponse));
         } else {
             this.sendResponse(statusCode, message, serverResponse);
         }
+    }
+
+    private handleUncaughtException(serverResponse: ServerResponse): void {
+        this.sendResponse(500, "Internal server error!", serverResponse)
     }
 
     private sendResponse(statusCode: number, message: Object, serverResponse: ServerResponse): void {

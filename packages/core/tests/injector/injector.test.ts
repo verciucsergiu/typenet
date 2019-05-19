@@ -2,7 +2,8 @@ import { expect } from 'chai';
 import 'reflect-metadata';
 
 import 'mocha';
-import { Injectable, DependencyContainer } from '../../src';
+import { Injectable } from '../../src';
+import { DependencyContainer } from '../../src/injector/dependency-container';
 
 describe('Injector tests', () => {
 

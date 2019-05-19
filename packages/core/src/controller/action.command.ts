@@ -1,9 +1,9 @@
-import { DependencyContainer } from "../injector";
 import { ClassDefinition } from "../application/types/class-definition";
 import { HttpContext } from "./types/http-context";
 import { RouteParameter } from "../routing/route-parameter";
 import { MethodParameterType } from "../routing/method-parameter-metadata";
 import { ActionResult } from "./http-responses";
+import { DependencyContainer } from "../injector/dependency-container";
 
 export class ActionCommand {
 
