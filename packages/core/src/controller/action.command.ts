@@ -32,8 +32,11 @@ export class ActionCommand {
                     const parameterValue = await httpContext.getBodyAsJson();
                     params.push(parameterValue);
                 } else {
-                    // TODO: BUILD QUERY PARAMS
-                    params.push({});
+                    if (httpContext.query) {
+                        params.push(httpContext.query.toObject());
+                    } else {
+                        params.push({});
+                    }
                 }
             }
         }

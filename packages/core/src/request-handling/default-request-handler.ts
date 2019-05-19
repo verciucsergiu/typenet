@@ -21,10 +21,9 @@ export class DefaultRequestHandler implements RequestHandler {
         // FIX CONCURENCY SCOPE CREATION
         DependencyContainer.createScope();
 
-        const verb = request.method.toUpperCase() as HttpVerb;
         const httpContext = this.httpContextFactory.create(request);
         try {
-            const action = ApplicationContainer.getActionCommand(verb, Route.create(request.url));
+            const action = ApplicationContainer.getActionCommand(httpContext.method, httpContext.url);
             this.responseHandler.handle(await action.execute(httpContext), response);
         } catch (e) {
             if (e instanceof NotFoundException) {

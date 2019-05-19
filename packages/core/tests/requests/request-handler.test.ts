@@ -1,5 +1,5 @@
 import 'mocha';
-import { Controller, ActionResult, Ok, HttpGet, FromRoute, HttpPost, FromBody, Created } from '../../src';
+import { Controller, ActionResult, Ok, HttpGet, FromRoute, HttpPost, FromBody, Created, HttpDelete, FromQuery, NoContent } from '../../src';
 import { of } from 'rxjs';
 import { expect } from 'chai';
 
@@ -31,6 +31,12 @@ describe('Request handler tests', () => {
         @HttpPost('')
         create(@FromBody() body: any): ActionResult {
             return new Created(body);
+        }
+
+        
+        @HttpDelete('')
+        delete(@FromQuery() query: any): ActionResult {
+            return new NoContent(query);
         }
 
 
@@ -67,7 +73,7 @@ describe('Request handler tests', () => {
     it('Should return the observable result', () => {
         const req = new mockReq({ method: 'GET', url: `/${testResource}/observable` }) as IncomingMessage;
         const response = new mockRes();
-        const sut = new DefaultRequestHandler(new HttpContextFactory(new RequestBodyProvider(), ApplicationSettings.defaultSettings()), new JSONResponseHandler());
+        const sut = new DefaultRequestHandler(new HttpContextFactory(new RequestBodyProvider(ApplicationSettings.defaultSettings())), new JSONResponseHandler());
 
         sut.handle(req, response);
 
@@ -80,7 +86,7 @@ describe('Request handler tests', () => {
     it('Should return the promise result', () => {
         const req = new mockReq({ method: 'GET', url: `/${testResource}/promise` }) as IncomingMessage;
         const response = new mockRes();
-        const sut = new DefaultRequestHandler(new HttpContextFactory(new RequestBodyProvider(), ApplicationSettings.defaultSettings()), new JSONResponseHandler());
+        const sut = new DefaultRequestHandler(new HttpContextFactory(new RequestBodyProvider(ApplicationSettings.defaultSettings())), new JSONResponseHandler());
 
         sut.handle(req, response);
 
@@ -93,7 +99,7 @@ describe('Request handler tests', () => {
     it('Should return the sync result', () => {
         const req = new mockReq({ method: 'GET', url: `/${testResource}` }) as IncomingMessage;
         const response = new mockRes();
-        const sut = new DefaultRequestHandler(new HttpContextFactory(new RequestBodyProvider(), ApplicationSettings.defaultSettings()), new JSONResponseHandler());
+        const sut = new DefaultRequestHandler(new HttpContextFactory(new RequestBodyProvider(ApplicationSettings.defaultSettings())), new JSONResponseHandler());
 
         sut.handle(req, response);
 
@@ -107,7 +113,7 @@ describe('Request handler tests', () => {
     it('Should handle exceptions', () => {
         const req = new mockReq({ method: 'GET', url: `/${testResource}/error` }) as IncomingMessage;
         const response = new mockRes();
-        const sut = new DefaultRequestHandler(new HttpContextFactory(new RequestBodyProvider(), ApplicationSettings.defaultSettings()), new JSONResponseHandler());
+        const sut = new DefaultRequestHandler(new HttpContextFactory(new RequestBodyProvider(ApplicationSettings.defaultSettings())), new JSONResponseHandler());
 
         sut.handle(req, response);
 
@@ -120,7 +126,7 @@ describe('Request handler tests', () => {
     it('Should handle promise rejections', () => {
         const req = new mockReq({ method: 'GET', url: `/${testResource}/promiseError` }) as IncomingMessage;
         const response = new mockRes();
-        const sut = new DefaultRequestHandler(new HttpContextFactory(new RequestBodyProvider(), ApplicationSettings.defaultSettings()), new JSONResponseHandler());
+        const sut = new DefaultRequestHandler(new HttpContextFactory(new RequestBodyProvider(ApplicationSettings.defaultSettings())), new JSONResponseHandler());
 
         sut.handle(req, response);
 
@@ -133,7 +139,7 @@ describe('Request handler tests', () => {
     it('Should return not found when invalid route provided', () => {
         const req = new mockReq({ method: 'GET', url: `something` }) as IncomingMessage;
         const response = new mockRes();
-        const sut = new DefaultRequestHandler(new HttpContextFactory(new RequestBodyProvider(), ApplicationSettings.defaultSettings()), new JSONResponseHandler());
+        const sut = new DefaultRequestHandler(new HttpContextFactory(new RequestBodyProvider(ApplicationSettings.defaultSettings())), new JSONResponseHandler());
 
         sut.handle(req, response);
 
@@ -148,7 +154,7 @@ describe('Request handler tests', () => {
         const expectedId = '902392';
         const req = new mockReq({ method: 'GET', url: `/${testResource}/${expectedId}/` }) as IncomingMessage;
         const response = new mockRes();
-        const sut = new DefaultRequestHandler(new HttpContextFactory(new RequestBodyProvider(), ApplicationSettings.defaultSettings()), new JSONResponseHandler());
+        const sut = new DefaultRequestHandler(new HttpContextFactory(new RequestBodyProvider(ApplicationSettings.defaultSettings())), new JSONResponseHandler());
 
         sut.handle(req, response);
 
@@ -165,12 +171,29 @@ describe('Request handler tests', () => {
         req.end();
 
         const response = new mockRes();
-        const sut = new DefaultRequestHandler(new HttpContextFactory(new RequestBodyProvider(), ApplicationSettings.defaultSettings()), new JSONResponseHandler());
+        const sut = new DefaultRequestHandler(new HttpContextFactory(new RequestBodyProvider(ApplicationSettings.defaultSettings())), new JSONResponseHandler());
 
         sut.handle(req, response);
 
         response.on('finish', () => {
             expect(response.statusCode as number).to.be.eq(201);
+            expect(response._getJSON()).to.be.deep.eq(expected);
+        });
+    });
+
+
+    it('Should inject from query', () => {
+        const expected = { hello: "world" };
+        const req = new mockReq({ method: 'DELETE', url: `/${testResource}?hello=world` });
+        req.end();
+
+        const response = new mockRes();
+        const sut = new DefaultRequestHandler(new HttpContextFactory(new RequestBodyProvider(ApplicationSettings.defaultSettings())), new JSONResponseHandler());
+
+        sut.handle(req, response);
+
+        response.on('finish', () => {
+            expect(response.statusCode as number).to.be.eq(204);
             expect(response._getJSON()).to.be.deep.eq(expected);
         });
     });
