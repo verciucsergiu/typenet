@@ -1,9 +1,9 @@
-import { DependencyContainer } from "../injector";
 import { ClassDefinition } from "../application/types/class-definition";
 import { HttpContext } from "./types/http-context";
 import { RouteParameter } from "../routing/route-parameter";
 import { MethodParameterType } from "../routing/method-parameter-metadata";
 import { ActionResult } from "./http-responses";
+import { DependencyContainer } from "../injector/dependency-container";
 
 export class ActionCommand {
 
@@ -32,8 +32,11 @@ export class ActionCommand {
                     const parameterValue = await httpContext.getBodyAsJson();
                     params.push(parameterValue);
                 } else {
-                    // TODO: BUILD QUERY PARAMS
-                    params.push({});
+                    if (httpContext.query) {
+                        params.push(httpContext.query.toObject());
+                    } else {
+                        params.push({});
+                    }
                 }
             }
         }

@@ -1,19 +1,24 @@
 import * as http from 'http';
-import { DependencyContainer } from "../injector";
 import { RequestHandler, DefaultRequestHandler } from "../request-handling";
-import { Logger } from './logger';
-import { ConsoleLogger } from './console.logger';
+import { ClassDefinitionTyped, ClassDefinition } from './types/class-definition';
+import { DependencyContainer } from '../injector/dependency-container';
+import { METADATA } from '../metadata/metadata.constants';
 
 export class ApplicationFactory {
 
-    public static create(): Application {
-        const logger: Logger = DependencyContainer.resolve(ConsoleLogger);
-        return new CoreApplication(logger);
+    public static create(module: ClassDefinition): Application {
+        const decoratedWithModule = Reflect.getMetadata(METADATA.MODULE, module);
+        if (!decoratedWithModule) {
+            throw new Error(`${module.name} is not decorated with @Module() decorator!`);
+        }
+
+        return new CoreApplication();
     }
 }
 
 export interface Application {
-    useSettings<T extends Object>(settings: T): Application;
+    useSettings<T extends Object>(settings: T): void;
+    get<T>(injectable: ClassDefinitionTyped<T>): T;
     run(): Promise<void>;
 }
 
@@ -43,13 +48,15 @@ export class ApplicationSettings implements ServerSettings {
 }
 
 class CoreApplication implements Application {
-    constructor(private readonly logger: Logger) { }
 
     private settings = ApplicationSettings.defaultSettings();
 
-    public useSettings<T extends Object>(settings: T): Application {
+    public useSettings<T extends Object>(settings: T): void {
         this.settings = Object.assign(this.settings, settings);
-        return this;
+    }
+
+    public get<T>(injectable: ClassDefinitionTyped<T>): T {
+        return DependencyContainer.resolve(injectable);
     }
 
     public run(): Promise<void> {
@@ -58,8 +65,6 @@ class CoreApplication implements Application {
         const requestHandler: RequestHandler = DependencyContainer.resolve(DefaultRequestHandler);
         const server = createServer(requestHandler);
         server.listen(this.settings.port);
-
-        this.logger.log(`Application started.\nListening at http://localhost:${this.settings.port}/`)
         return Promise.resolve();
     }
 }

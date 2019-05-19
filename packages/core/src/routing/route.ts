@@ -3,7 +3,7 @@ export class Route extends Array<RouteSegment> {
     private constructor(items?: Array<RouteSegment>) {
         super(...items);
     }
-    
+
     public static create(items?: Array<RouteSegment>): Route;
     public static create(url: string): Route;
     public static create(url: string | Array<RouteSegment>): Route {
