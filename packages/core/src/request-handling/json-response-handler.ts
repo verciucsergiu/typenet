@@ -23,7 +23,7 @@ export class JSONResponseHandler implements ResponseHandler {
     }
 
     private handleUncaughtException(serverResponse: ServerResponse): void {
-        this.sendResponse(500, "Internal server error!", serverResponse)
+        this.sendResponse(500, "Internal server error!", serverResponse);
     }
 
     private sendResponse(statusCode: number, message: Object, serverResponse: ServerResponse): void {

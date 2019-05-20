@@ -10,7 +10,7 @@ function createVerbDecorator(verb: HttpVerb) {
             (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<F>) => {
             ApplicationContainer.addMethod(verb, Route.create(route), target, propertyKey);
         };
-    }
+    };
 }
 
 export const HttpGet = createVerbDecorator('GET');

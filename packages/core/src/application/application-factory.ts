@@ -3,6 +3,9 @@ import { RequestHandler, DefaultRequestHandler } from "../request-handling";
 import { ClassDefinitionTyped, ClassDefinition } from './types/class-definition';
 import { DependencyContainer } from '../injector/dependency-container';
 import { METADATA } from '../metadata/metadata.constants';
+import { ApplicationSettings } from './application-settings';
+import { Application } from './application';
+import { CorsBuilder } from './cors/cors.options';
 
 export class ApplicationFactory {
 
@@ -16,66 +19,38 @@ export class ApplicationFactory {
     }
 }
 
-export interface Application {
-    useSettings<T extends Object>(settings: T): void;
-    get<T>(injectable: ClassDefinitionTyped<T>): T;
-    run(): Promise<void>;
-}
-
-export class ApplicationSettings implements ServerSettings {
-    [key: string]: any;
-
-    public maxRequestSize: number = this['maxRequestSize'];
-    public port: number = this['port'];
-
-    constructor(settings: any) {
-        for (const setting in settings) {
-            this[setting] = settings[setting];
-        }
-    }
-
-
-    public get(key: string): any {
-        return this[key];
-    }
-
-    public static defaultSettings(): ApplicationSettings {
-        return new ApplicationSettings({
-            maxRequestSize: 1e6,
-            port: 3000
-        });
-    }
-}
-
 class CoreApplication implements Application {
+    private settings;
+    private corsPolicyBuilderFunction;
 
-    private settings = ApplicationSettings.defaultSettings();
+    constructor() {
+        this.settings = ApplicationSettings.defaultSettings();
+        DependencyContainer.registerService(ApplicationSettings, 'singleInstance', this.settings);
+    }
 
     public useSettings<T extends Object>(settings: T): void {
         this.settings = Object.assign(this.settings, settings);
+        DependencyContainer.registerService(ApplicationSettings, 'singleInstance', this.settings);
     }
 
     public get<T>(injectable: ClassDefinitionTyped<T>): T {
         return DependencyContainer.resolve(injectable);
     }
 
-    public run(): Promise<void> {
+    public useCorsPolicy(fnBuilder: (corsBuilder: CorsBuilder) => CorsBuilder): void {
+        this.corsPolicyBuilderFunction = fnBuilder;
+    }
 
-        DependencyContainer.registerService(ApplicationSettings, 'singleInstance', this.settings);
+    public run(): Promise<void> {
         const requestHandler: RequestHandler = DependencyContainer.resolve(DefaultRequestHandler);
-        const server = createServer(requestHandler);
+        const server = this.createServer(requestHandler);
         server.listen(this.settings.port);
         return Promise.resolve();
     }
-}
 
-function createServer(requestHandler: RequestHandler): http.Server {
-    return http.createServer(async (request: http.IncomingMessage, response: http.ServerResponse) => {
-        await requestHandler.handle(request, response);
-    })
-}
-
-interface ServerSettings {
-    maxRequestSize: number;
-    port: number;
+    private createServer(requestHandler: RequestHandler): http.Server {
+        return http.createServer(async (request: http.IncomingMessage, response: http.ServerResponse) => {
+            await requestHandler.handle(request, response);
+        });
+    }
 }

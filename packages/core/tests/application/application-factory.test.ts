@@ -1,6 +1,6 @@
 import 'mocha';
 import { expect } from 'chai';
-import { ApplicationFactory, Module, Injectable } from '../../src';
+import { ApplicationFactory, Module, Injectable, ApplicationSettings } from '../../src';
 
 describe('Application factory', () => {
 
@@ -33,8 +33,19 @@ describe('Application factory', () => {
         const setting = { maxRequestSize: 30 };
 
         app.useSettings(setting);
+        const settings = app.get(ApplicationSettings);
 
-        expect(app['settings'].maxRequestSize).to.be.equal(30);
+        expect(settings.maxRequestSize).to.be.equal(30);
+    });
+
+    it('Should get key return key from settings', () => {
+        const app = ApplicationFactory.create(MyModule);
+        const mySettings = { mySettings: 123 };
+
+        app.useSettings(mySettings);
+        const settings = app.get(ApplicationSettings);
+
+        expect(settings.get('mySettings')).to.be.equal(123);
     });
 
     it('Should resolve application injectables', () => {
@@ -58,13 +69,25 @@ describe('Application factory', () => {
 
     it('Should throw exception when metadata for provider is provided by injecatble class is not decorated accordingly', () => {
         const action = () => {
-            class MyService { }
+            class NonInjectable { }
 
-            @Module({ providers: [MyService] })
+            @Module({ providers: [NonInjectable] })
             class InvalidModule { }
         };
 
         expect(action).to.throw();
     });
-});
 
+    it('Should start a server when run is called', async () => {
+        const app = ApplicationFactory.create(MyModule);
+        // find a way to test this!
+        // try chai request
+        // await app.run();
+    });
+
+    it('Should be able to declare a cors policy', () => {
+        const app = ApplicationFactory.create(MyModule);
+
+        app.useCorsPolicy((builder) => builder.allowAnyHeaders().allowAnyMethods().allowAnyOrigins());
+    });
+});

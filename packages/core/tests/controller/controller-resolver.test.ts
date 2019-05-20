@@ -9,12 +9,12 @@ describe('Controller resolver', () => {
     class TestController {
 
         @HttpGet('')
-        get(): ActionResult {
+        public get(): ActionResult {
             return new Ok();
         }
 
         @HttpPost(':id')
-        getById(@FromRoute(':id') id: string): ActionResult {
+        public getById(@FromRoute(':id') id: string): ActionResult {
             return new Ok(id);
         }
     }
@@ -22,12 +22,12 @@ describe('Controller resolver', () => {
     @Controller('api/test/:id')
     class SubTestController {
         @HttpGet('')
-        get(): ActionResult {
+        public get(): ActionResult {
             return new Ok();
         }
 
         @HttpGet(':subTestId')
-        getById(@FromRoute(':id') id: string): ActionResult {
+        public getById(@FromRoute(':id') id: string): ActionResult {
             return new Ok(id);
         }
     }
@@ -35,29 +35,29 @@ describe('Controller resolver', () => {
     @Controller('api/resources')
     class ResourcesController {
         @HttpPost('')
-        create(): ActionResult {
+        public create(): ActionResult {
             return new Created();
         }
     }
 
     it('Should find getById method from TestController', () => {
         const action = ApplicationContainer.getActionCommand('POST', Route.create('api/test/1'));
-        expect((<any>action).controllerFunction.name).to.be.equal(TestController.name);
-        expect((<any>action).methodName).to.be.equal("getById");
+        expect((action as any).controllerFunction.name).to.be.equal(TestController.name);
+        expect((action as any).methodName).to.be.equal("getById");
     });
 
     it('Should find get method from TestController', () => {
         const action = ApplicationContainer.getActionCommand('GET', Route.create('api/test'));
-        expect((<any>action).controllerFunction.name).to.be.equal(TestController.name);
-        expect((<any>action).methodName).to.be.equal("get");
+        expect((action as any).controllerFunction.name).to.be.equal(TestController.name);
+        expect((action as any).methodName).to.be.equal("get");
     });
 
     it('Should create parameter route accordingly', () => {
         const expectedRouteParameters = { ':id': 2, ':subtestid': 3 };
 
         const action = ApplicationContainer.getActionCommand('GET', Route.create('api/test/20/30'));
-        expect((<any>action).controllerFunction.name).to.be.equal(SubTestController.name);
-        expect((<any>action).methodName).to.be.equal("getById");
-        expect((<any>action).routeParameters).to.include(expectedRouteParameters);
+        expect((action as any).controllerFunction.name).to.be.equal(SubTestController.name);
+        expect((action as any).methodName).to.be.equal("getById");
+        expect((action as any).routeParameters).to.include(expectedRouteParameters);
     });
 });

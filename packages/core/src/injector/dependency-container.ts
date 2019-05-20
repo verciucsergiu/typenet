@@ -5,7 +5,7 @@ import { InjectableNotFound } from './errors/injecatble-not-found';
 import { InstanceType } from './instance-type';
 
 interface DependencyMetadata {
-    constructorMetadata: ClassDefinition[];
+    constructorMetadata: ClassDefinition[] | undefined;
     instanceType: InstanceType;
 }
 
@@ -17,6 +17,9 @@ export class DependencyContainer {
 
     public static registerService(service: ClassDefinition, instanctType: InstanceType = 'scopedInstance', instance?: Object): void {
         this.dependencyMetadata[service.name] = { instanceType: instanctType, constructorMetadata: Reflect.getMetadata('design:paramtypes', service) };
+        if (instance && instanctType === 'singleInstance') {
+            this.singleInstances[service.name] = instance;
+        }
     }
 
     public static createScope(): void {

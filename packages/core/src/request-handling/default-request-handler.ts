@@ -3,7 +3,7 @@ import { JSONResponseHandler } from './json-response-handler';
 import { NotFoundException } from '../server-exceptions/not-found.exception';
 import { NotFound, InternalServerError } from '../controller/http-responses';
 import { ApplicationContainer } from '../application/application-container';
-import { Injectable, } from '../injector';
+import { Injectable } from '../injector';
 import { HttpContextFactory } from "../controller/http-context-factory";
 import { RequestHandler } from './request-handler';
 import { DependencyContainer } from '../injector/dependency-container';

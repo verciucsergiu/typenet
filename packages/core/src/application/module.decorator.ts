@@ -9,12 +9,12 @@ export function Module(moduleMetadata: ModuleMetadata) {
         const validateClass = (classDefinition: ClassDefinition, metadataKey: string, decorator: string) => {
             const metadataValue = Reflect.getMetadata(metadataKey, classDefinition);
             if (!metadataValue) {
-                throw new Error(`Invalid configuration for module '${target.name}'. ${classDefinition.name} is not decorated with '${decorator}'`)
+                throw new Error(`Invalid configuration for module '${target.name}'. ${classDefinition.name} is not decorated with '${decorator}'`);
             }
-        }
+        };
         const validateKey = (key: ClassDefinition[], metadataKey: string, decorator: string) => {
             if (key) {
-                key.forEach(x => validateClass(x, metadataKey, decorator));
+                key.forEach((x) => validateClass(x, metadataKey, decorator));
             }
         };
 

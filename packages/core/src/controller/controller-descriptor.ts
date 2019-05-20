@@ -27,7 +27,7 @@ export class ControllerDescriptor {
 
     public get(verb: HttpVerb, route: Route): { methodName: string, routeParameters: RouteParameter } {
         let currentTree = this.routesTree;
-        let routeParameters: RouteParameter = {};
+        const routeParameters: RouteParameter = {};
         for (const [index, s] of route.entries()) {
             const segment = s.toString();
             if (currentTree[segment] !== undefined) {
@@ -39,7 +39,7 @@ export class ControllerDescriptor {
                 }
             }
 
-            if (index == route.length - 1) {
+            if (index === route.length - 1) {
                 return {
                     methodName: currentTree[`__${verb.toLowerCase()}__`] as any,
                     routeParameters: routeParameters

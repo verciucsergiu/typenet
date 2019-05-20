@@ -1,12 +1,12 @@
 export class Route extends Array<RouteSegment> {
 
-    private constructor(items?: Array<RouteSegment>) {
+    private constructor(items?: RouteSegment[]) {
         super(...items);
     }
 
-    public static create(items?: Array<RouteSegment>): Route;
+    public static create(items?: RouteSegment[]): Route;
     public static create(url: string): Route;
-    public static create(url: string | Array<RouteSegment>): Route {
+    public static create(url: string | RouteSegment[]): Route {
         if (this.isArray(url)) {
             const interalRoute = this.createInternal();
             interalRoute.push(...url);
@@ -34,7 +34,7 @@ export class Route extends Array<RouteSegment> {
                 throw new Error(`Invalid route: ${url}`);
             }
             const internalRoute = this.createInternal();
-            internalRoute.push(...parsedRoute.filter(x => x != '').map(x => new RouteSegment(x)));
+            internalRoute.push(...parsedRoute.filter((x) => x !== '').map((x) => new RouteSegment(x)));
             return internalRoute;
         } else {
             return Route.empty();

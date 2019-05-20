@@ -13,14 +13,14 @@ export class HttpContextFactory {
     constructor(private readonly bodyProvider: RequestBodyProvider) { }
 
     public create(request: IncomingMessage): HttpContext {
-        var urlSplited = request.url.split('?');
+        const urlSplited = request.url.split('?');
 
         if (urlSplited.length > 2) {
             throw new Error(`Invalid url ${request.url}`);
         }
 
-        var route = urlSplited[0];
-        var query = new QueryString(urlSplited[1]);
+        const route = urlSplited[0];
+        const query = new QueryString(urlSplited[1]);
 
         return {
             httpVersion: request.httpVersion,

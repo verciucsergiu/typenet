@@ -7,20 +7,21 @@
   "scripts": {
     "build": "npm run remove-lib && npm run compile && npm run remove-tests && npm run move-src-to-root && move lib\\src\\* lib && npm run remove-lib-src",
     "coverage": "nyc mocha",
-    "prepare": "npm run build",
+    "prepare": "npm run lint && npm run build",
     "test": "mocha --require ts-node/register tests/**/*.ts",
     "remove-lib": "if exist \"lib\" rd /S /Q lib",
     "remove-tests": "rd /S /Q \"lib/tests\"",
     "move-src-to-root": "for /r ./lib/src %a in (.) do @move %a ./lib",
     "remove-lib-src": "rd /S /Q \"lib/src\"",
-    "compile": "tsc -p ."
+    "compile": "tsc -p .",
+    "lint": "tslint --project tsconfig.json --fix \"src/**/*.ts\""
   },
   "author": "Sergiu Verciuc",
   "license": "ISC",
   "dependencies": {
     "http": "0.0.0",
-    "reflect-metadata": "^0.1.13",
-    "rxjs": "^6.5.1"
+    "reflect-metadata": "0.1.13",
+    "rxjs": "6.5.1"
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",
@@ -33,7 +34,8 @@
     "sinon": "^7.3.2",
     "source-map-support": "^0.5.12",
     "ts-node": "^8.1.0",
-    "typescript": "3.4.3"
+    "typescript": "3.4.3",
+    "tslint": "^5.16.0"
   },
   "files": [
     "lib/**/*"
