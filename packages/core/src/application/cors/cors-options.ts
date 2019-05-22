@@ -31,32 +31,32 @@ export class CorsBuilder {
     private headers: string | string[];
     private methods: HttpVerb | HttpVerb[];
 
-    public allowAnyOrigins(): CorsBuilder {
+    public allowAnyOrigins(): this {
         this.origins = '*';
         return this;
     }
 
-    public allowAnyMethods(): CorsBuilder {
+    public allowAnyMethods(): this {
         this.methods = ['GET', 'PATCH', 'POST', 'PUT', 'DELETE', 'OPTIONS' as HttpVerb];
         return this;
     }
 
-    public allowAnyHeaders(): CorsBuilder {
+    public allowAnyHeaders(): this {
         this.headers = '*';
         return this;
     }
 
-    public withHeaders(...params: string[]): CorsBuilder {
+    public withHeaders(...params: string[]): this {
         this.headers = params;
         return this;
     }
 
-    public withMethods(...parmas: HttpVerb[]): CorsBuilder {
+    public withMethods(...parmas: HttpVerb[]): this {
         this.methods = parmas;
         return this;
     }
 
-    public withOrigins(...params: string[]): CorsBuilder {
+    public withOrigins(...params: string[]): this {
         this.origins = params;
         return this;
     }

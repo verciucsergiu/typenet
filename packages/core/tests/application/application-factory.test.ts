@@ -1,11 +1,11 @@
 import 'mocha';
 import { expect } from 'chai';
-import { ApplicationFactory, Module, Injectable, ApplicationSettings } from '../../src';
+import { ApplicationFactory, Module, Injectable, ApplicationSettings, CorsOptions } from '../../src';
+import { ApplicationContainer } from '../../src/application/application-container';
+import { CorsMiddleware } from '../../src/application/cors/cors.middleware';
+import { DependencyContainer } from '../../src/injector/dependency-container';
 
 describe('Application factory', () => {
-
-    class NoModule { }
-
     @Injectable()
     class MyService { }
 
@@ -17,6 +17,8 @@ describe('Application factory', () => {
     class MyModule { }
 
     it('Should throw exception if a module that is not decorated is provided', () => {
+        class NoModule { }
+
         const action = () => ApplicationFactory.create(NoModule);
 
         expect(action).to.throw();
@@ -85,9 +87,32 @@ describe('Application factory', () => {
         // await app.run();
     });
 
-    it('Should be able to declare a cors policy', () => {
+    it('Should execute all handlers for run before starting a server', () => {
+        let executed = false;
         const app = ApplicationFactory.create(MyModule);
+        app.onRun(() => {
+            executed = true;
+        });
+
+        app.run();
+
+        expect(executed).to.be.true;
+        app['server'].close();
+    });
+
+    it('Should be able to declare a cors policy and register cors middleware as middleware', () => {
+        const app = ApplicationFactory.create(MyModule);
+        const expectedMiddlewares = [CorsMiddleware];
 
         app.useCorsPolicy((builder) => builder.allowAnyHeaders().allowAnyMethods().allowAnyOrigins());
+        app.run();
+
+        const middleware = ApplicationContainer.getMiddlewares();
+        const options = DependencyContainer.resolve(CorsOptions);
+
+        expect(middleware).to.be.deep.equal(expectedMiddlewares);
+        expect(options).to.not.be.undefined;
+
+        app['server'].close();
     });
 });

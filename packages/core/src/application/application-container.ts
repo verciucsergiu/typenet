@@ -7,7 +7,8 @@ import { ParameterType } from '../controller/types/parameter.type';
 import { DependencyContainer } from '../injector/dependency-container';
 
 export class ApplicationContainer {
-    public static controllersContainer = new ControllersContainer();
+    private static controllersContainer = new ControllersContainer();
+    private static middlewares: ClassDefinition[] = [];
 
     public static addController(route: Route, controller: ClassDefinition): void {
         DependencyContainer.registerService(controller);
@@ -24,5 +25,14 @@ export class ApplicationContainer {
 
     public static getActionCommand(verb: HttpVerb, route: Route): ActionCommand {
         return this.controllersContainer.resolveAction(verb, route);
+    }
+
+    public static registerMiddleware(middlewareClass: ClassDefinition) {
+        this.middlewares.push(middlewareClass);
+        DependencyContainer.registerService(middlewareClass, 'singleInstance');
+    }
+
+    public static getMiddlewares(): ClassDefinition[] {
+        return this.middlewares;
     }
 }

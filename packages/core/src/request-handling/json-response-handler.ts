@@ -1,41 +1,44 @@
-import { ServerResponse } from 'http';
 import { Injectable } from '../injector';
 import { Observable } from 'rxjs';
 import { ActionResult } from '../controller';
 import { ResponseHandler } from './response-handler';
+import { ResponseContext } from '../application';
+import { Writable } from 'stream';
 
 @Injectable()
 export class JSONResponseHandler implements ResponseHandler {
 
-    public handle(response: ActionResult, serverResponse: ServerResponse): void {
+    public handle(response: ActionResult, requestContext: ResponseContext): void {
         const { statusCode, message } = response;
         if (this.isPromise(message)) {
             message
-                .then((result) => this.sendResponse(statusCode, result, serverResponse))
-                .catch(() => this.handleUncaughtException(serverResponse));
+                .then((result) => this.writeResponse(statusCode, result, requestContext))
+                .catch(() => this.handleUncaughtException(requestContext));
         } else if (this.isObservable(message)) {
-            message.subscribe(
-                (result) => this.sendResponse(statusCode, result, serverResponse),
-                () => this.handleUncaughtException(serverResponse));
+            const subscription = message.subscribe(
+                (result) => this.writeResponse(statusCode, result, requestContext),
+                () => this.handleUncaughtException(requestContext),
+                () => { subscription.unsubscribe(); });
         } else {
-            this.sendResponse(statusCode, message, serverResponse);
+            this.writeResponse(statusCode, message, requestContext);
         }
     }
 
-    private handleUncaughtException(serverResponse: ServerResponse): void {
-        this.sendResponse(500, "Internal server error!", serverResponse);
+    private handleUncaughtException(responseContext: ResponseContext): void {
+        this.writeResponse(500, "Internal server error!", responseContext);
     }
 
-    private sendResponse(statusCode: number, message: Object, serverResponse: ServerResponse): void {
-        serverResponse.writeHead(statusCode, { 'Content-Type': 'application/json' });
+    private writeResponse(statusCode: number, message: Object, requestContext: ResponseContext): void {
+        requestContext.writeHead(statusCode, { 'Content-Type': 'application/json' });
         let responseMessage: string = '';
         try {
             responseMessage = JSON.stringify(message);
         } catch {
             responseMessage = `{ "message" : " ${message}" }`;
         } finally {
-            serverResponse.write(responseMessage || '');
-            serverResponse.end();
+            requestContext.write(responseMessage || '');
+            // TODO: INVESTIGATE IF THIS IN MIDDLEWARES AFTER NEXT IS CALLED THE RESPONSE MIGHT ME CHANGED.
+            (requestContext as any as Writable).end();
         }
     }
 
