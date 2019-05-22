@@ -30,7 +30,6 @@ describe('Controller container', () => {
             expect(secondDepth.__controllerType__).to.be.equal(SubcategoryController);
         });
 
-
         it('Should create paremeter tree when a route has a parameter', () => {
             const container = new ControllersContainer();
             container.addController(Route.create('api/category'), CategoryContoller);

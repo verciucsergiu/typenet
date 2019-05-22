@@ -69,9 +69,9 @@ export class ControllersContainer {
     }
 
     private resolveControllers(route: Route): PossibleControllerForRoute[] {
-        let controllerTypes: PossibleControllerForRoute[] = [];
+        const controllerTypes: PossibleControllerForRoute[] = [];
         let currentTree = this.routesTree;
-        let rp: RouteParameter = {};
+        const rp: RouteParameter = {};
 
         for (const [index, routeSegment] of route.entries()) {
             const segment = routeSegment.toString();
@@ -95,16 +95,23 @@ export class ControllersContainer {
     }
 
     private createAction(controller: PossibleControllerForRoute, verb: HttpVerb, routeLength: number): ActionCommand {
-        const descriptor = <ControllerDescriptor>this.controllerDescriptors[controller.controller.name];
+        const descriptor = this.controllerDescriptors[controller.controller.name] as ControllerDescriptor;
         const method = descriptor.get(verb, controller.remainingRoute);
         if (!method.methodName) {
             return null;
         } else {
             const actionParameters = controller.routeParameters;
             for (const parameter in method.routeParameters) {
+                if (method.routeParameters) {
                 method.routeParameters[parameter] = method.routeParameters[parameter] + routeLength - controller.remainingRoute.length;
+                }
             }
-            return new ActionCommand(controller.controller, method.methodName, { ...method.routeParameters, ...actionParameters }, this.methodParameters[`${controller.controller.name}.${method.methodName}`]);
+            return new ActionCommand(
+                controller.controller,
+                method.methodName,
+                { ...method.routeParameters, ...actionParameters },
+                this.methodParameters[`${controller.controller.name}.${method.methodName}`
+                ]);
         }
     }
 
@@ -116,12 +123,8 @@ export class ControllersContainer {
         };
     }
 
-    private createMethodParameters(): void {
-
-    }
-
     private createRemainingRoute(index: number, route: Route): Route {
-        return index + 1 != route.length ? Route.create(route.slice(index + 1)) : Route.empty();
+        return index + 1 !== route.length ? Route.create(route.slice(index + 1)) : Route.empty();
     }
 
     private validateActions(actions: ActionCommand[], verb: HttpVerb, route: Route): void {
@@ -129,7 +132,7 @@ export class ControllersContainer {
             throw new Error('Multiple matches for current request!');
         }
 
-        if (actions.length == 0) {
+        if (actions.length === 0) {
             throw new NotFoundException(`Action for the route "${route.toString()}" with method ${verb} was not found!`);
         }
     }
@@ -139,5 +142,5 @@ export class ControllersContainer {
 interface PossibleControllerForRoute {
     controller: ClassDefinition;
     remainingRoute: Route;
-    routeParameters: RouteParameter
+    routeParameters: RouteParameter;
 }

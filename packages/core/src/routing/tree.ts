@@ -1,7 +1,7 @@
 import { ClassDefinition } from "../application/types/class-definition";
 
 export interface Tree<T> {
-    [routeSegment: string]: T;
+    [key: string]: T;
 }
 
 interface RouteTreeArray extends Tree<RouteTree> {
@@ -14,7 +14,7 @@ export type RouteTree = RouteTreeArray & {
     __controllerType__?: ClassDefinition;
     __parameterTree__?: RouteTree;
     __parameterName___?: string;
-}
+};
 
 export type MethodTree = MethodTreeArray & {
     __parameterTree__?: MethodTree;
@@ -24,4 +24,4 @@ export type MethodTree = MethodTreeArray & {
     __put__?: string;
     __delete__?: string;
     __patch__?: string;
-}
+};

@@ -1,5 +1,6 @@
 export const METADATA = {
     CONTROLLER: '__CONTROLLER__',
     MODULE: '__MODULE__',
-    INJECTABLE: '__INJECTABLE__'
-}
+    INJECTABLE: '__INJECTABLE__',
+    MIDDLEWARE: '__MIDDLEWARE__'
+};

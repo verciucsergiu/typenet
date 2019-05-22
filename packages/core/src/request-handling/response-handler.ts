@@ -1,6 +1,6 @@
-import { ServerResponse } from "http";
 import { ActionResult } from "../controller";
+import { ResponseContext } from "../application";
 
 export interface ResponseHandler {
-    handle(response: ActionResult, serverResponse: ServerResponse): void;
+    handle(response: ActionResult, responseContext: ResponseContext): void;
 }

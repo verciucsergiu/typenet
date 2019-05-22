@@ -1,6 +1,4 @@
 export interface ClassDefinition extends ClassDefinitionTyped<any> {
 }
 
-export interface ClassDefinitionTyped<T> {
-    new(...args: any[]): T;
-}
+export type ClassDefinitionTyped<T> = new(...args: any[]) => T;

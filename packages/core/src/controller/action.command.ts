@@ -1,5 +1,5 @@
 import { ClassDefinition } from "../application/types/class-definition";
-import { HttpContext } from "./types/http-context";
+import { HttpContext } from "../application/types/http-context";
 import { RouteParameter } from "../routing/route-parameter";
 import { MethodParameterType } from "../routing/method-parameter-metadata";
 import { ActionResult } from "./http-responses";
@@ -26,14 +26,14 @@ export class ActionCommand {
             for (const parameter of this.methodParameters) {
                 if (parameter.route) {
                     const parameterIndexFromRoute = this.routeParameters[parameter.parameterName];
-                    const parameterValue = httpContext.url[parameterIndexFromRoute].toString();
+                    const parameterValue = httpContext.request.url[parameterIndexFromRoute].toString();
                     params.push(parameterValue);
                 } else if (parameter.body) {
-                    const parameterValue = await httpContext.getBodyAsJson();
+                    const parameterValue = await httpContext.request.getBodyAsJson();
                     params.push(parameterValue);
                 } else {
-                    if (httpContext.query) {
-                        params.push(httpContext.query.toObject());
+                    if (httpContext.request.query) {
+                        params.push(httpContext.request.query.toObject());
                     } else {
                         params.push({});
                     }

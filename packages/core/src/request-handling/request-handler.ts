@@ -1,5 +1,5 @@
-import { ServerResponse, IncomingMessage } from "http";
+import { HttpContext } from "../application";
 
 export interface RequestHandler {
-    handle(request: IncomingMessage, response: ServerResponse): Promise<void>;
+    handle(httpContext: HttpContext): Promise<void>;
 }

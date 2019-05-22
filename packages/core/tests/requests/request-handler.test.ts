@@ -7,11 +7,11 @@ import * as mockReq from 'mock-req';
 import * as mockRes from 'mock-res';
 
 import { IncomingMessage } from "http";
-import { RequestBodyProvider } from '../../src/request-handling/request-body-parser';
+import { RequestBodyProvider } from '../../src/request-handling/request-body-provider';
 import { JSONResponseHandler } from '../../src/request-handling/json-response-handler';
 import { DefaultRequestHandler } from '../../src/request-handling/default-request-handler';
-import { HttpContextFactory } from "../../src/controller/http-context-factory";
-import { ApplicationSettings } from '../../src/application';
+import { HttpContextFactory } from "../../src/application/http-context-factory";
+import { ApplicationSettings } from '../../src/application/types/application-settings';
 
 describe('Request handler tests', () => {
     const testResource = 'test/resource';
@@ -22,60 +22,58 @@ describe('Request handler tests', () => {
     @Controller(testResource)
     class ResourceController {
 
-
         @HttpGet(':id')
-        getById(@FromRoute(':id') id: string): ActionResult {
+        public getById(@FromRoute(':id') id: string): ActionResult {
             return new Ok(id);
         }
 
         @HttpPost('')
-        create(@FromBody() body: any): ActionResult {
+        public create(@FromBody() body: any): ActionResult {
             return new Created(body);
         }
 
-        
         @HttpDelete('')
-        delete(@FromQuery() query: any): ActionResult {
+        public delete(@FromQuery() query: any): ActionResult {
             return new NoContent(query);
         }
 
-
         @HttpGet('observable')
-        getObservable(): ActionResult {
+        public getObservable(): ActionResult {
             return new Ok(of(observableResponse));
         }
 
         @HttpGet('promise')
-        getPromise(): ActionResult {
+        public getPromise(): ActionResult {
             return new Ok(new Promise((resolve) => resolve(promiseResponse)));
         }
 
         @HttpGet('')
-        get() {
+        public get() {
             return new Ok(syncResponse);
         }
 
         @HttpGet('error')
-        throw() {
-            var result = () => {
+        public throw() {
+            const result = () => {
                 throw new Error('something is wrong');
-            }
+            };
             return new Ok(result());
         }
 
         @HttpGet('promiseError')
-        promiseError() {
+        public promiseError() {
             return new Ok(Promise.reject('Resource not found!'));
         }
     }
 
-
     it('Should return the observable result', () => {
         const req = new mockReq({ method: 'GET', url: `/${testResource}/observable` }) as IncomingMessage;
         const response = new mockRes();
-        const sut = new DefaultRequestHandler(new HttpContextFactory(new RequestBodyProvider(ApplicationSettings.defaultSettings())), new JSONResponseHandler());
+        const httpContextFactory = new HttpContextFactory(new RequestBodyProvider(), ApplicationSettings.defaultSettings());
+        const sut = new DefaultRequestHandler(new JSONResponseHandler());
+        const httpContext = httpContextFactory.create(req, response);
 
-        sut.handle(req, response);
+        sut.handle(httpContext);
 
         response.on('finish', () => {
             expect(response.statusCode as number).to.be.eq(200);
@@ -86,9 +84,11 @@ describe('Request handler tests', () => {
     it('Should return the promise result', () => {
         const req = new mockReq({ method: 'GET', url: `/${testResource}/promise` }) as IncomingMessage;
         const response = new mockRes();
-        const sut = new DefaultRequestHandler(new HttpContextFactory(new RequestBodyProvider(ApplicationSettings.defaultSettings())), new JSONResponseHandler());
+        const httpContextFactory = new HttpContextFactory(new RequestBodyProvider(), ApplicationSettings.defaultSettings());
+        const sut = new DefaultRequestHandler(new JSONResponseHandler());
+        const httpContext = httpContextFactory.create(req, response);
 
-        sut.handle(req, response);
+        sut.handle(httpContext);
 
         response.on('finish', () => {
             expect(response.statusCode as number).to.be.eq(200);
@@ -99,9 +99,11 @@ describe('Request handler tests', () => {
     it('Should return the sync result', () => {
         const req = new mockReq({ method: 'GET', url: `/${testResource}` }) as IncomingMessage;
         const response = new mockRes();
-        const sut = new DefaultRequestHandler(new HttpContextFactory(new RequestBodyProvider(ApplicationSettings.defaultSettings())), new JSONResponseHandler());
+        const httpContextFactory = new HttpContextFactory(new RequestBodyProvider(), ApplicationSettings.defaultSettings());
+        const sut = new DefaultRequestHandler(new JSONResponseHandler());
+        const httpContext = httpContextFactory.create(req, response);
 
-        sut.handle(req, response);
+        sut.handle(httpContext);
 
         response.on('finish', () => {
             expect(response.statusCode as number).to.be.eq(200);
@@ -109,13 +111,14 @@ describe('Request handler tests', () => {
         });
     });
 
-
     it('Should handle exceptions', () => {
         const req = new mockReq({ method: 'GET', url: `/${testResource}/error` }) as IncomingMessage;
         const response = new mockRes();
-        const sut = new DefaultRequestHandler(new HttpContextFactory(new RequestBodyProvider(ApplicationSettings.defaultSettings())), new JSONResponseHandler());
+        const httpContextFactory = new HttpContextFactory(new RequestBodyProvider(), ApplicationSettings.defaultSettings());
+        const sut = new DefaultRequestHandler(new JSONResponseHandler());
+        const httpContext = httpContextFactory.create(req, response);
 
-        sut.handle(req, response);
+        sut.handle(httpContext);
 
         response.on('finish', () => {
             expect(response.statusCode as number).to.be.eq(500);
@@ -126,9 +129,11 @@ describe('Request handler tests', () => {
     it('Should handle promise rejections', () => {
         const req = new mockReq({ method: 'GET', url: `/${testResource}/promiseError` }) as IncomingMessage;
         const response = new mockRes();
-        const sut = new DefaultRequestHandler(new HttpContextFactory(new RequestBodyProvider(ApplicationSettings.defaultSettings())), new JSONResponseHandler());
+        const httpContextFactory = new HttpContextFactory(new RequestBodyProvider(), ApplicationSettings.defaultSettings());
+        const sut = new DefaultRequestHandler(new JSONResponseHandler());
+        const httpContext = httpContextFactory.create(req, response);
 
-        sut.handle(req, response);
+        sut.handle(httpContext);
 
         response.on('finish', () => {
             expect(response.statusCode as number).to.be.eq(500);
@@ -139,9 +144,11 @@ describe('Request handler tests', () => {
     it('Should return not found when invalid route provided', () => {
         const req = new mockReq({ method: 'GET', url: `something` }) as IncomingMessage;
         const response = new mockRes();
-        const sut = new DefaultRequestHandler(new HttpContextFactory(new RequestBodyProvider(ApplicationSettings.defaultSettings())), new JSONResponseHandler());
+        const httpContextFactory = new HttpContextFactory(new RequestBodyProvider(), ApplicationSettings.defaultSettings());
+        const sut = new DefaultRequestHandler(new JSONResponseHandler());
+        const httpContext = httpContextFactory.create(req, response);
 
-        sut.handle(req, response);
+        sut.handle(httpContext);
 
         response.on('finish', () => {
             expect(response.statusCode as number).to.be.eq(404);
@@ -149,14 +156,15 @@ describe('Request handler tests', () => {
         });
     });
 
-
     it('Should inject from route', () => {
         const expectedId = '902392';
         const req = new mockReq({ method: 'GET', url: `/${testResource}/${expectedId}/` }) as IncomingMessage;
         const response = new mockRes();
-        const sut = new DefaultRequestHandler(new HttpContextFactory(new RequestBodyProvider(ApplicationSettings.defaultSettings())), new JSONResponseHandler());
+        const httpContextFactory = new HttpContextFactory(new RequestBodyProvider(), ApplicationSettings.defaultSettings());
+        const sut = new DefaultRequestHandler(new JSONResponseHandler());
+        const httpContext = httpContextFactory.create(req, response);
 
-        sut.handle(req, response);
+        sut.handle(httpContext);
 
         response.on('finish', () => {
             expect(response.statusCode as number).to.be.eq(200);
@@ -169,11 +177,12 @@ describe('Request handler tests', () => {
         const req = new mockReq({ method: 'POST', url: `/${testResource}/` });
         req.write(JSON.stringify(expected));
         req.end();
-
         const response = new mockRes();
-        const sut = new DefaultRequestHandler(new HttpContextFactory(new RequestBodyProvider(ApplicationSettings.defaultSettings())), new JSONResponseHandler());
+        const httpContextFactory = new HttpContextFactory(new RequestBodyProvider(), ApplicationSettings.defaultSettings());
+        const sut = new DefaultRequestHandler(new JSONResponseHandler());
+        const httpContext = httpContextFactory.create(req, response);
 
-        sut.handle(req, response);
+        sut.handle(httpContext);
 
         response.on('finish', () => {
             expect(response.statusCode as number).to.be.eq(201);
@@ -181,16 +190,16 @@ describe('Request handler tests', () => {
         });
     });
 
-
     it('Should inject from query', () => {
         const expected = { hello: "world" };
         const req = new mockReq({ method: 'DELETE', url: `/${testResource}?hello=world` });
         req.end();
-
         const response = new mockRes();
-        const sut = new DefaultRequestHandler(new HttpContextFactory(new RequestBodyProvider(ApplicationSettings.defaultSettings())), new JSONResponseHandler());
+        const httpContextFactory = new HttpContextFactory(new RequestBodyProvider(), ApplicationSettings.defaultSettings());
+        const sut = new DefaultRequestHandler(new JSONResponseHandler());
+        const httpContext = httpContextFactory.create(req, response);
 
-        sut.handle(req, response);
+        sut.handle(httpContext);
 
         response.on('finish', () => {
             expect(response.statusCode as number).to.be.eq(204);

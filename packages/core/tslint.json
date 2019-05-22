@@ -1,12 +1,11 @@
 {
     "extends": [
-        "tslint:latest",
-        "tslint-blueprint"
+        "tslint:latest"
     ],
     "rules": {
         "max-line-length": {
             "options": [
-                140
+                180
             ]
         },
         "quotemark": [
@@ -44,6 +43,9 @@
         "interface-name": false,
         "no-implicit-dependencies": false,
         "no-empty-interface": false,
-        "no-string-literal": false
+        "no-string-literal": false,
+        "forin": false,
+        "max-classes-per-file": false,
+        "prefer-object-spread": false
     }
 }
