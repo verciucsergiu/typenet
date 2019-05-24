@@ -1,18 +1,13 @@
 {
     "extends": [
-        "tslint:latest",
-        "tslint-blueprint"
+        "tslint:latest"
     ],
     "rules": {
         "max-line-length": {
             "options": [
-                140
+                200
             ]
         },
-        "array-type": [
-            true,
-            "generic"
-        ],
         "quotemark": [
             false,
             "single",

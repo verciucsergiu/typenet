@@ -16,10 +16,10 @@ export class RequestPipeline {
 
     public async resolveRequest(request: IncomingMessage, response: ServerResponse): Promise<void> {
         const httpContext = this.httpContextFactory.create(request, response);
-        this.executeMiddlewares(httpContext);
+        await this.executeMiddlewares(httpContext);
     }
 
-    private executeMiddlewares(httpContext: HttpContext): void {
+    private async executeMiddlewares(httpContext: HttpContext): Promise<void> {
         const middlewares = ApplicationContainer.getMiddlewares();
 
         const middlewaresInstances: PipelineMiddleware[] = [];
@@ -27,18 +27,18 @@ export class RequestPipeline {
             middlewaresInstances.push(DependencyContainer.resolve(middleware) as PipelineMiddleware);
         }
 
-        this.handleMiddlware(httpContext, middlewaresInstances, 0);
+        await this.handleMiddlware(httpContext, middlewaresInstances, 0);
     }
 
-    private handleMiddlware(httpContext: HttpContext, middlewares: PipelineMiddleware[], index: number) {
-        const next: Function = index >= middlewares.length - 1 ?
-            () => this.resolve(httpContext) :
-            () => this.handleMiddlware(httpContext, middlewares, index + 1);
+    private async handleMiddlware(httpContext: HttpContext, middlewares: PipelineMiddleware[], index: number): Promise<void> {
+        const next = index >= middlewares.length - 1 ?
+            () => Promise.resolve(this.resolve(httpContext))  :
+            () => Promise.resolve(this.handleMiddlware(httpContext, middlewares, index + 1));
 
-        middlewares[index].apply(httpContext, next);
+        await middlewares[index].apply(httpContext, next);
     }
 
-    private resolve(httpContext: HttpContext) {
-        this.requestHandler.handle(httpContext);
+    private async resolve(httpContext: HttpContext) {
+        await this.requestHandler.handle(httpContext);
     }
 }

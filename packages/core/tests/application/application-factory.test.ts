@@ -4,6 +4,7 @@ import { ApplicationFactory, Module, Injectable, ApplicationSettings, CorsOption
 import { ApplicationContainer } from '../../src/application/application-container';
 import { CorsMiddleware } from '../../src/application/cors/cors.middleware';
 import { DependencyContainer } from '../../src/injector/dependency-container';
+import { EntryMiddleware } from '../../src/application/middleware/entry.middleware';
 
 describe('Application factory', () => {
     @Injectable()
@@ -102,7 +103,8 @@ describe('Application factory', () => {
 
     it('Should be able to declare a cors policy and register cors middleware as middleware', () => {
         const app = ApplicationFactory.create(MyModule);
-        const expectedMiddlewares = [CorsMiddleware];
+        ApplicationContainer['middlewares'] = [];
+        const expectedMiddlewares = [EntryMiddleware, CorsMiddleware];
 
         app.useCorsPolicy((builder) => builder.allowAnyHeaders().allowAnyMethods().allowAnyOrigins());
         app.run();

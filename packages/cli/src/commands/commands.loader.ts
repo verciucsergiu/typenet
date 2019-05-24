@@ -11,12 +11,11 @@ export class CommandsLoader {
         new NewCommand(new NewAction()).register(program);
         new ServeCommand(new ServeAction()).register(program);
 
-        console.log("Commands registered!");
-
-        program.on('command:*', () => {
-            console.error(chalk.red('Invalid command: %s'), program.args.join(' '));
-            console.log('See --help for a list of available commands.');
-            //process.exit(1);
-        });
+        program
+            .command('*')
+            .action(() => {
+                program.outputHelp();
+                process.exit(1);
+            });
     }
 }

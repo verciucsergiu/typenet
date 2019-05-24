@@ -3,7 +3,6 @@ import { Observable } from 'rxjs';
 import { ActionResult } from '../controller';
 import { ResponseHandler } from './response-handler';
 import { ResponseContext } from '../application';
-import { Writable } from 'stream';
 
 @Injectable()
 export class JSONResponseHandler implements ResponseHandler {
@@ -37,8 +36,6 @@ export class JSONResponseHandler implements ResponseHandler {
             responseMessage = `{ "message" : " ${message}" }`;
         } finally {
             requestContext.write(responseMessage || '');
-            // TODO: INVESTIGATE IF THIS IN MIDDLEWARES AFTER NEXT IS CALLED THE RESPONSE MIGHT ME CHANGED.
-            (requestContext as any as Writable).end();
         }
     }
 

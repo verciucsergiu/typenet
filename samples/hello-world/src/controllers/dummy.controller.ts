@@ -5,6 +5,6 @@ export class DummyController {
 
     @HttpGet('')
     public helloWorld(): ActionResult {
-        return new Ok('hello world');
+        return new Ok({ hello: 'hello world' });
     }
 }

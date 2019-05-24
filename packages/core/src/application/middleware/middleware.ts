@@ -2,16 +2,18 @@ import { ClassDefinition } from "../types/class-definition";
 import { METADATA } from "../../metadata/metadata.constants";
 import { ApplicationContainer } from "../application-container";
 import { HttpContext } from "../types/http-context";
+import { DependencyContainer } from "../../injector/dependency-container";
 
-function middlewareDeclaration() {
+function middleware() {
     return (target: ClassDefinition) => {
         Reflect.defineMetadata(METADATA.MIDDLEWARE, true, target);
         ApplicationContainer.registerMiddleware(target);
+        DependencyContainer.registerService(target, 'singleInstance');
     };
 }
 
 export interface PipelineMiddleware {
-    apply(context: HttpContext, next: Function): void;
+    apply(context: HttpContext, next: () => Promise<void>): Promise<void>;
 }
 
-export const Middleware = middlewareDeclaration;
+export const Middleware = middleware;
