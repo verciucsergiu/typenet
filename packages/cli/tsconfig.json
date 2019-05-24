@@ -7,7 +7,7 @@
     "emitDecoratorMetadata": true,
     "declaration": true,
     "sourceMap": true,
-    "types": ["mocha", "node"]
+    "types": ["node"]
   },
   "include": [
     "src/index.ts",

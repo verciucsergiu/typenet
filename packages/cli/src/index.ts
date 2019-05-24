@@ -4,7 +4,6 @@ import * as commander from 'commander';
 // tslint:disable-next-line: no-duplicate-imports
 import { CommanderStatic } from 'commander';
 import { CommandsLoader } from './commands/commands.loader';
-
 const bootstrap = () => {
     const program: CommanderStatic = commander;
     CommandsLoader.load(program);

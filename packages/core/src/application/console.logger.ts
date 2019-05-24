@@ -6,4 +6,8 @@ export class ConsoleLogger implements Logger {
     public log(message: string): void {
         console.log(message);
     }
+
+    public error(message: string): void {
+        console.error(message);
+    }
 }

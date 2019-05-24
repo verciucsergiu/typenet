@@ -5,7 +5,7 @@
     "rules": {
         "max-line-length": {
             "options": [
-                140
+                200
             ]
         },
         "quotemark": [
