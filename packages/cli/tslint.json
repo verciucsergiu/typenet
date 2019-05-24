@@ -1,7 +1,6 @@
 {
     "extends": [
-        "tslint:latest",
-        "tslint-blueprint"
+        "tslint:latest"
     ],
     "rules": {
         "max-line-length": {
@@ -9,10 +8,6 @@
                 140
             ]
         },
-        "array-type": [
-            true,
-            "generic"
-        ],
         "quotemark": [
             false,
             "single",

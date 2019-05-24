@@ -4,7 +4,6 @@ import { ActionCommand } from '../controller/action.command';
 import { ClassDefinition } from './types/class-definition';
 import { Route } from '../routing/route';
 import { ParameterType } from '../controller/types/parameter.type';
-import { DependencyContainer } from '../injector/dependency-container';
 
 export class ApplicationContainer {
     private static controllersContainer = new ControllersContainer();

@@ -1,6 +1,6 @@
 import 'mocha';
 import { Controller, ActionResult, Ok, HttpGet, FromRoute, HttpPost, FromBody, Created, HttpDelete, FromQuery, NoContent } from '../../src';
-import { of } from 'rxjs';
+import { of, Observable } from 'rxjs';
 import { expect } from 'chai';
 
 import * as mockReq from 'mock-req';
@@ -39,7 +39,10 @@ describe('Request handler tests', () => {
 
         @HttpGet('observable')
         public getObservable(): ActionResult {
-            return new Ok(of(observableResponse));
+            const obs = Observable.create(function subscribe(observer) {
+                observer.next(observableResponse);
+            });
+            return new Ok(obs);
         }
 
         @HttpGet('promise')

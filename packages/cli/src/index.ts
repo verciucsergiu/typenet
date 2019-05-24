@@ -1,21 +1,20 @@
 #!/usr/bin/env node
 
 import * as commander from 'commander';
+// tslint:disable-next-line: no-duplicate-imports
 import { CommanderStatic } from 'commander';
 import { CommandsLoader } from './commands/commands.loader';
 
 const bootstrap = () => {
     const program: CommanderStatic = commander;
-    
+    CommandsLoader.load(program);
     program.name('typnet');
 
-    CommandsLoader.load(program);
     program.version(require('../package.json').version, '-v, --version');
 
-    const command = commander.parse(process.argv);
-    console.log(process.argv);
+    program.parse(process.argv);
 
-    if(!program.args.length) {
+    if (!program.args.length) {
         program.outputHelp();
         return;
     }

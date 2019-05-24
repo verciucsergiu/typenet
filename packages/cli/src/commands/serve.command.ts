@@ -1,11 +1,12 @@
 import { CommanderStatic } from "commander";
-import { AbstractCommand } from "./abstract.command";
+import { Command } from "./command";
 
-export class ServeCommand extends AbstractCommand {
+export class ServeCommand extends Command {
     public register(program: CommanderStatic): void {
         program
-            .command('serve', 'Serve typenet project to a given port')
+            .command('serve')
             .alias('s')
+            .description('Serves the typenet application')
             .action(() => {
                 this.action.handle([]);
             });

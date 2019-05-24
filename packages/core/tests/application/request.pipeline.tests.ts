@@ -22,25 +22,25 @@ describe('Request pipeline', () => {
 
         @Middleware()
         class FirstMiddleware implements PipelineMiddleware {
-            public apply(context: HttpContext, next: Function): void {
+            public async apply(context: HttpContext, next: () => Promise<void>): Promise<void> {
                 executionPipeline.push(FirstMiddleware);
-                next();
+                await next();
             }
         }
 
         @Middleware()
         class SecondMiddleware implements PipelineMiddleware {
-            public apply(context: HttpContext, next: Function): void {
+            public async apply(context: HttpContext, next: () => Promise<void>): Promise<void> {
                 executionPipeline.push(SecondMiddleware);
-                next();
+                await next();
             }
         }
 
         @Middleware()
         class ThirdMiddleware implements PipelineMiddleware {
-            public apply(context: HttpContext, next: Function): void {
+            public async apply(context: HttpContext, next: () => Promise<void>): Promise<void> {
                 executionPipeline.push(ThirdMiddleware);
-                next();
+                await next();
             }
         }
         const expectedExecution: ClassDefinition[] = [FirstMiddleware, SecondMiddleware, ThirdMiddleware];
@@ -50,20 +50,20 @@ describe('Request pipeline', () => {
         expect(executionPipeline).to.be.ordered.members(expectedExecution);
     });
 
-    it('Should request return through the middleware after request handling', () => {
+    it('Should request return through the middleware after request handling', async () => {
         let beforeNext = false;
         let afterNext = false;
 
         @Middleware()
         class RandomMiddleware implements PipelineMiddleware {
-            public apply(context: HttpContext, next: Function): void {
+            public async apply(context: HttpContext, next: () => Promise<void>): Promise<void> {
                 beforeNext = true;
-                next();
+                await next();
                 afterNext = true;
             }
         }
 
-        sut.resolveRequest({} as any, {} as any);
+        await sut.resolveRequest({} as any, {} as any);
 
         expect(beforeNext).to.be.true;
         expect(afterNext).to.be.true;

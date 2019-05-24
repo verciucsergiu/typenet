@@ -13,7 +13,7 @@ function middleware() {
 }
 
 export interface PipelineMiddleware {
-    apply(context: HttpContext, next: Function): void;
+    apply(context: HttpContext, next: () => Promise<void>): Promise<void>;
 }
 
 export const Middleware = middleware;

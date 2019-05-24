@@ -9,7 +9,7 @@ export class CorsMiddleware implements PipelineMiddleware {
         this.corsHeaders = corsOptions.toHeaders();
     }
 
-    public apply(context: HttpContext, next: Function): void {
+    public async apply(context: HttpContext, next: () => Promise<void>): Promise<void> {
         for (const key in this.corsHeaders) {
             if (this.corsHeaders.hasOwnProperty(key)) {
                 const element = this.corsHeaders[key];
@@ -17,7 +17,7 @@ export class CorsMiddleware implements PipelineMiddleware {
             }
         }
 
-        next();
+        await next();
     }
 
 }

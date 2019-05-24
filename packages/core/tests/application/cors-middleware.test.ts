@@ -6,7 +6,7 @@ import { CorsBuilder as CorsOptionsBuilder, RequestContext, ResponseContext } fr
 
 describe('CORS Middleware', () => {
 
-    it('Should add cors options to header', () => {
+    it('Should add cors options to header', async () => {
         const middleware = new CorsMiddleware(new CorsOptionsBuilder().withMethods('PUT').build());
         const expected = { 'Access-Control-Allow-Methods': 'PUT' };
         const headers = {};
@@ -15,7 +15,7 @@ describe('CORS Middleware', () => {
         };
         const mockHttpContext = { request: {} as any as RequestContext, response: { setHeader } as any as ResponseContext };
 
-        middleware.apply(mockHttpContext, () => { });
+        await middleware.apply(mockHttpContext, () => Promise.resolve());
 
         expect(headers).to.be.deep.equal(expected);
     });

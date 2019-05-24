@@ -8,6 +8,7 @@ import { CorsBuilder, CorsOptions } from './cors/cors-options';
 import { RequestPipeline } from './request.pipeline';
 import { ApplicationContainer } from './application-container';
 import { CorsMiddleware } from './cors/cors.middleware';
+import { EntryMiddleware } from './middleware/entry.middleware';
 
 export class ApplicationFactory {
 
@@ -33,6 +34,7 @@ class CoreApplication implements Application {
     constructor() {
         this.settings = ApplicationSettings.defaultSettings();
         DependencyContainer.registerService(ApplicationSettings, 'singleInstance', this.settings);
+        this.runHandles.push(() => this.registerEntryMiddleware());
         this.runHandles.push(() => this.registerCorsIfNeeded());
     }
 
@@ -71,6 +73,10 @@ class CoreApplication implements Application {
         return http.createServer(async (request: http.IncomingMessage, response: http.ServerResponse) => {
             await requestPipeline.resolveRequest(request, response);
         });
+    }
+    private registerEntryMiddleware(): void {
+        DependencyContainer.registerService(EntryMiddleware, 'singleInstance');
+        ApplicationContainer.registerMiddleware(EntryMiddleware);
     }
 
     private registerCorsIfNeeded(): void {
