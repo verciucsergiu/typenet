@@ -75,9 +75,11 @@ class CoreApplication implements Application {
 
     private registerCorsIfNeeded(): void {
         if (this.corsPolicyBuilderFunction) {
+            DependencyContainer.registerService(CorsMiddleware, 'singleInstance');
+            ApplicationContainer.registerMiddleware(CorsMiddleware);
+
             const builder = this.corsPolicyBuilderFunction(new CorsBuilder());
             const options = builder.build();
-            ApplicationContainer.registerMiddleware(CorsMiddleware);
             DependencyContainer.registerService(CorsOptions, 'singleInstance', options);
         }
     }

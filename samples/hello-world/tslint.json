@@ -1,7 +1,6 @@
 {
     "extends": [
-        "tslint:latest",
-        "tslint-blueprint"
+        "tslint:latest"
     ],
     "rules": {
         "max-line-length": {
