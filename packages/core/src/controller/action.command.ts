@@ -8,8 +8,8 @@ import { DependencyContainer } from "../injector/dependency-container";
 export class ActionCommand {
 
     constructor(
-        private readonly controllerFunction: ClassDefinition,
-        private readonly methodName: string,
+        public readonly controllerFunction: ClassDefinition,
+        public readonly methodName: string,
         private readonly routeParameters: RouteParameter,
         private readonly methodParameters: MethodParameterType[]) {
     }

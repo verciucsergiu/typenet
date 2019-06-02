@@ -5,14 +5,14 @@ import { NotFoundException } from "../server-exceptions/not-found.exception";
 import { ClassDefinition } from "../application/types/class-definition";
 import { Route } from "../routing/route";
 import { RouteParameter } from "../routing/route-parameter";
-import { RouteTree } from "../routing/tree";
+import { RouteTree, Tree } from "../routing/tree";
 import { MethodParameterMetadata, MethodParameterType } from "../routing/method-parameter-metadata";
 import { ParameterType } from "./types/parameter.type";
 
 export class ControllersContainer {
     private readonly routesTree: RouteTree = {};
 
-    private readonly controllerDescriptors: ControllerDescriptor[] = [];
+    private readonly controllerDescriptors: Tree<ControllerDescriptor> = {};
 
     private readonly methodParameters: MethodParameterMetadata[] = [];
 
@@ -103,15 +103,14 @@ export class ControllersContainer {
             const actionParameters = controller.routeParameters;
             for (const parameter in method.routeParameters) {
                 if (method.routeParameters) {
-                method.routeParameters[parameter] = method.routeParameters[parameter] + routeLength - controller.remainingRoute.length;
+                    method.routeParameters[parameter] = method.routeParameters[parameter] + routeLength - controller.remainingRoute.length;
                 }
             }
             return new ActionCommand(
                 controller.controller,
                 method.methodName,
                 { ...method.routeParameters, ...actionParameters },
-                this.methodParameters[`${controller.controller.name}.${method.methodName}`
-                ]);
+                this.methodParameters[`${controller.controller.name}.${method.methodName}`]);
         }
     }
 
