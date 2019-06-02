@@ -26,6 +26,7 @@ describe('Sockets', () => {
     class ApplicationModule { }
 
     it('Should exchange messages between server and client', async () => {
+        const message = 'hello world!';
         const settings = { port: 5000 };
         const app = ApplicationFactory.create(ApplicationModule);
         app.useSettings(settings);
@@ -34,7 +35,6 @@ describe('Sockets', () => {
 
         const client = io.connect(socketUrl, options);
         client.on('connect', () => {
-            const message = 'hello world!';
             client.emit('message', message);
             client.on('data received', (data) => {
                 expect(data).to.be.equal(message);
