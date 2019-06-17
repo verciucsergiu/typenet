@@ -19,7 +19,7 @@
   "author": "Sergiu Verciuc",
   "license": "ISC",
   "peerDependencies": {
-    "@typenet/core": "^0.0.14",
+    "@typenet/core": "^0.0.15",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^6.5.1"
   },
@@ -60,7 +60,7 @@
     "instrument": true
   },
   "dependencies": {
-    "@typenet/core": "0.0.14",
+    "@typenet/core": "0.0.15",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^6.5.2",
     "socket.io": "^2.2.0"

@@ -2,9 +2,14 @@ import { Tree } from '@typenet/core/lib/routing/tree';
 import { ClassDefinition } from '@typenet/core/lib/application/types/class-definition';
 import { AuthorizationOptions } from './authorization.module';
 
+const defaultRoleIdentification = (token: any, role: string) => {
+    return token['role'] === role;
+};
+
 export class AuthorizationContainer {
     private static controllers: Tree<string[]> = {};
     private static authOptions: AuthorizationOptions;
+    private static roleIdentification: (token: any, role: string) => boolean = defaultRoleIdentification;
 
     public static addController(controller: ClassDefinition): void {
         if (!this.controllers[controller.name]) {
@@ -44,5 +49,13 @@ export class AuthorizationContainer {
 
     public static get options(): AuthorizationOptions {
         return this.authOptions;
+    }
+
+    public static useRoleIdentificationFunc(func: (token: any, role: string) => boolean): void {
+        this.roleIdentification = func;
+    }
+
+    public static get roleIdentificationFunc(): (token: any, role: string) => boolean {
+        return this.roleIdentificationFunc;
     }
 }
