@@ -1,0 +1,25 @@
+{
+  "name": "hello-world",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node dist/",
+    "start:dev": "node --inspect dist/",
+    "compile": "tsc --watch"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/mocha": "5.2.6",
+    "@types/node": "11.11.3",
+    "typescript": "3.4.5"
+  },
+  "dependencies": {
+    "@typenet/core": "0.0.14",
+    "@typenet/web-socket": "0.0.1",
+    "@types/socket.io": "^2.1.2",
+    "reflect-metadata": "^0.1.13",
+    "socket.io": "^2.2.0"
+  }
+}

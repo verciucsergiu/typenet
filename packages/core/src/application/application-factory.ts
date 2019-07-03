@@ -25,10 +25,10 @@ export class ApplicationFactory {
     }
 }
 
-class CoreApplication implements Application {
+export class CoreApplication implements Application {
     private settings;
     private corsPolicyBuilderFunction: (corsBuilder: CorsBuilder) => CorsBuilder;
-    private runHandles: Array<() => void> = [];
+    private runHandles: Array<(server: http.Server) => void> = [];
     private server: http.Server;
 
     constructor() {
@@ -38,35 +38,38 @@ class CoreApplication implements Application {
         this.runHandles.push(() => this.registerCorsIfNeeded());
     }
 
-    public useSettings<T extends Object>(settings: T): void {
+    public useSettings<T extends Object>(settings: T): this {
         this.settings = Object.assign(this.settings, settings);
         DependencyContainer.registerService(ApplicationSettings, 'singleInstance', this.settings);
+        return this;
     }
 
     public get<T>(injectable: ClassDefinitionTyped<T>): T {
         return DependencyContainer.resolve(injectable);
     }
 
-    public useCorsPolicy(fnBuilder: (corsBuilder: CorsBuilder) => CorsBuilder): void {
+    public useCorsPolicy(fnBuilder: (corsBuilder: CorsBuilder) => CorsBuilder): this {
         this.corsPolicyBuilderFunction = fnBuilder;
+        return this;
     }
 
     public run(): Promise<void> {
-        this.execRunHandlers();
-
         const requestPipeline = DependencyContainer.resolve(RequestPipeline);
         const server = this.createServer(requestPipeline);
         this.server = server;
+
+        this.execRunHandlers();
         server.listen(this.settings.port);
         return Promise.resolve();
     }
 
-    public onRun(handler: () => void): void {
+    public onRun(handler: (server: http.Server) => void): this {
         this.runHandles.push(handler);
+        return this;
     }
 
     private execRunHandlers(): void {
-        this.runHandles.forEach((handler) => handler());
+        this.runHandles.forEach((handler) => handler(this.server));
     }
 
     private createServer(requestPipeline: RequestPipeline): http.Server {
