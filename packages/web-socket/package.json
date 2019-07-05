@@ -21,7 +21,8 @@
   "peerDependencies": {
     "@typenet/core": "0.0.15",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "^6.5.1"
+    "rxjs": "^6.5.1",
+    "socket.io": "^2.2.0"
   },
   "devDependencies": {
     "@types/chai": "4.1.7",
