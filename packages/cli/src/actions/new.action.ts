@@ -43,6 +43,8 @@ export class NewAction extends Action {
                 this.loader.fail(chalk.red.bold(`Something went wrong! Fetching the boilerplate failed with code ${statuscode}!\nPlease try again!`));
                 process.exit(1);
             }
+
+            exec('if exist \".git\" rd /S /Q .git');
             this.loader.succeed(chalk.green.bold('Fetching the boilerplate. Completed!'));
             this.loader.start(chalk.yellow.bold('Installing dependencies. Please wait...'));
             exec('npm install', { silent: true }, (code) => {

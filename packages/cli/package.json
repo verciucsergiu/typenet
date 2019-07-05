@@ -1,6 +1,6 @@
 {
   "name": "@typenet/cli",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "@typenet/cli",
   "main": "bin/index.js",
   "scripts": {
